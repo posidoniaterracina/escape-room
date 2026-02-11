@@ -35,17 +35,17 @@ body{
     width:28px;
     height:28px;
     border-radius:50%;
-    background:#ffffff;
+    background:#fff;
     border:2px solid #ccc;
     cursor:pointer;
     transform:translate(-50%,-50%);
-    transition:transform .2s ease, box-shadow .2s ease;
-    z-index:3;
+    transition:.2s ease;
+    z-index:5;
 }
 
 .hotspot:hover{
     transform:translate(-50%,-50%) scale(1.15);
-    box-shadow:0 0 10px rgba(0,0,0,0.3);
+    box-shadow:0 0 8px rgba(0,0,0,.3);
 }
 
 .hotspot::after{
@@ -60,34 +60,34 @@ body{
     transform:translate(-50%,-50%);
 }
 
-/* BOX DESCRIZIONE */
-#descrizione{
-    margin:25px auto 0 auto;
-    width:60%;
+/* BOX IKEA STYLE */
+.tooltip{
+    position:absolute;
+    min-width:220px;
+    max-width:260px;
     background:#fff;
-    padding:20px;
+    padding:15px;
     border-radius:12px;
-    box-shadow:0 0 12px rgba(0,0,0,.15);
-    font-size:18px;
-    color:#333;
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+    font-size:14px;
+    text-align:left;
     opacity:0;
     visibility:hidden;
-    transform:translateY(10px);
-    transition:all .25s ease;
+    transform:translate(-50%, -120%) scale(.95);
+    transition:.2s ease;
+    z-index:10;
 }
 
-#descrizione.active{
+.tooltip.active{
     opacity:1;
     visibility:visible;
-    transform:translateY(0);
+    transform:translate(-50%, -130%) scale(1);
 }
 
-.linkbox{
-    margin-top:12px;
+.tooltip a{
+    display:block;
+    margin-top:10px;
     font-weight:bold;
-}
-
-.linkbox a{
     color:#1a73e8;
     text-decoration:underline;
 }
@@ -131,46 +131,54 @@ body{
 
 </div>
 
-<div id="descrizione"></div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
-const hotspots=document.querySelectorAll(".hotspot");
-const box=document.getElementById("descrizione");
+let activeTooltip=null;
 
-function mostraBox(testo,link){
-    if(box.classList.contains("active") && box.dataset.contenuto===testo){
-        chiudiBox();
-        return;
+document.querySelectorAll(".hotspot").forEach(function(h){
+
+    const tooltip=document.createElement("div");
+    tooltip.className="tooltip";
+    tooltip.innerHTML=
+        h.dataset.testo+
+        '<a href="'+encodeURI(h.dataset.link)+'">Scegli questo ingrediente</a>';
+
+    h.parentElement.appendChild(tooltip);
+
+    function openTooltip(){
+        if(activeTooltip && activeTooltip!==tooltip){
+            activeTooltip.classList.remove("active");
+        }
+        tooltip.style.top=h.style.top;
+        tooltip.style.left=h.style.left;
+        tooltip.classList.add("active");
+        activeTooltip=tooltip;
     }
 
-    box.innerHTML=
-        testo+
-        '<div class="linkbox">'+
-        '<a href="'+encodeURI(link)+'">Scegli questo ingrediente</a>'+
-        '</div>';
-
-    box.dataset.contenuto=testo;
-    box.classList.add("active");
-}
-
-function chiudiBox(){
-    box.classList.remove("active");
-}
-
-hotspots.forEach(function(h){
     h.addEventListener("click",function(e){
         e.stopPropagation();
-        mostraBox(h.dataset.testo,h.dataset.link);
+        if(tooltip.classList.contains("active")){
+            tooltip.classList.remove("active");
+            activeTooltip=null;
+        }else{
+            openTooltip();
+        }
     });
 
-    h.addEventListener("mouseenter",function(){
-        mostraBox(h.dataset.testo,h.dataset.link);
-    });
 });
 
-document.addEventListener("click",function(e){
-    if(!e.target.closest(".hotspot") && !e.target.closest("#descrizione")){
-        ch
+document.addEventListener("click",function(){
+    if(activeTooltip){
+        activeTooltip.classList.remove("active");
+        activeTooltip=null;
+    }
+});
+
+});
+</script>
+
+</body>
+</html>
