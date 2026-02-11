@@ -17,46 +17,59 @@
             width: 70%;
             border-radius: 10px;
         }
+
+        /* HOTSPOT IKEA STYLE */
         .hotspot {
             position: absolute;
             cursor: pointer;
-            width: 25px;
-            height: 25px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            background: rgba(255, 0, 0, 0.8);
-            border: 2px solid #fff;
-            box-shadow: 0 0 5px rgba(0,0,0,0.4);
+            background: #ffffff;
+            border: 3px solid #1a73e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .hotspot::after {
+            content: "";
+            width: 10px;
+            height: 10px;
+            background: #1a73e8;
+            border-radius: 50%;
+        }
+
+        /* BOX DESCRIZIONE */
         #descrizione {
-            margin-top: 20px;
+            margin-top: 25px;
             font-size: 20px;
             font-weight: bold;
             color: #333;
-            min-height: 40px;
+            min-height: 60px;
             background: #ffffff;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 20px;
+            border-radius: 12px;
             width: 60%;
             margin-left: auto;
             margin-right: auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 12px rgba(0,0,0,0.15);
+            display: none;
         }
-        .scelta {
-            margin-top: 30px;
-            font-size: 22px;
-            font-weight: bold;
-        }
+
         .scelta a {
-            color: blue;
+            color: #1a73e8;
+            font-weight: bold;
             text-decoration: underline;
         }
+
         .label {
             position: absolute;
-            transform: translate(-50%, -150%);
+            transform: translate(-50%, -160%);
             background: rgba(255,255,255,0.9);
             padding: 3px 6px;
             border-radius: 6px;
             font-size: 12px;
+            border: 1px solid #ddd;
         }
     </style>
 </head>
@@ -64,83 +77,69 @@
 
 <div class="container">
     <h1>Stanza 1</h1>
-    <p>Per la ricetta della Carbonara, osserva gli ingredienti e poi fai la tua scelta.</p>
+    <p>Per la ricetta della carbonara c’è un ingrediente di troppo… individualo!</p>
 
     <div style="position: relative; display: inline-block;">
         <img src="carbonara.jpg" alt="Carbonara">
 
-        <!-- HOTSPOT 1: Spaghetti -->
+        <!-- SPAGHETTI -->
         <div class="hotspot"
              style="top: 62%; left: 32%;"
-             onmouseover="mostra('Spaghetti: 400g di pasta lunga, base fondamentale della Carbonara.')"
-             onmouseout="nascondi()"
-             onclick="toggle('Spaghetti: 400g di pasta lunga, base fondamentale della Carbonara.')">
+             onclick="toggle('Spaghetti: 400g di pasta lunga, base fondamentale della carbonara.', 'prosegui.html')">
         </div>
         <div class="label" style="top: 62%; left: 32%;">Spaghetti</div>
 
-        <!-- HOTSPOT 2: Guanciale -->
+        <!-- GUANCIALE -->
         <div class="hotspot"
              style="top: 45%; left: 60%;"
-             onmouseover="mostra('Guanciale: tagliato a listarelle, rosolato fino a diventare croccante.')"
-             onmouseout="nascondi()"
-             onclick="toggle('Guanciale: tagliato a listarelle, rosolato fino a diventare croccante.')">
+             onclick="toggle('Guanciale: rosolato fino a diventare croccante, ingrediente chiave.', 'prosegui.html')">
         </div>
         <div class="label" style="top: 45%; left: 60%;">Guanciale</div>
 
-        <!-- HOTSPOT 3: Uova -->
+        <!-- UOVA -->
         <div class="hotspot"
              style="top: 30%; left: 42%;"
-             onmouseover="mostra('Uova: solo tuorli, cremosi e ricchi, per la crema della Carbonara.')"
-             onmouseout="nascondi()"
-             onclick="toggle('Uova: solo tuorli, cremosi e ricchi, per la crema della Carbonara.')">
+             onclick="toggle('Uova: solo tuorli, cremosi e ricchi, fondamentali per la crema.', 'prosegui.html')">
         </div>
         <div class="label" style="top: 30%; left: 42%;">Uova</div>
 
-        <!-- HOTSPOT 4: Pecorino -->
+        <!-- PECORINO -->
         <div class="hotspot"
              style="top: 72%; left: 48%;"
-             onmouseover="mostra('Pecorino Romano: grattugiato fine, dal sapore deciso, ingrediente chiave.')"
-             onmouseout="nascondi()"
-             onclick="toggle('Pecorino Romano: grattugiato fine, dal sapore deciso, ingrediente chiave.')">
+             onclick="toggle('Pecorino Romano: sapore deciso, grattugiato fine, indispensabile.', 'prosegui.html')">
         </div>
         <div class="label" style="top: 72%; left: 48%;">Pecorino</div>
+
+        <!-- INGREDIENTE SBAGLIATO (ESEMPIO: PANNA) -->
+        <div class="hotspot"
+             style="top: 20%; left: 70%;"
+             onclick="toggle('Panna: ingrediente NON previsto nella carbonara tradizionale!', 'errore.html')">
+        </div>
+        <div class="label" style="top: 20%; left: 70%;">Panna</div>
+
     </div>
 
     <div id="descrizione"></div>
-
-    <div class="scelta">
-        Per la ricetta della Carbonara, quale ingrediente scegli?
-        <br><br>
-        👉 <a href="prosegui.html">Scegli</a> (risposta corretta)
-        <br><br>
-        👉 <a href="errore.html">Scegli</a> (risposta sbagliata)
-    </div>
 </div>
 
 <script>
-let statoAperto = '';
+let aperto = false;
 
-function mostra(testo) {
-    if (!statoAperto) {
-        document.getElementById("descrizione").innerText = testo;
-    }
-}
-
-function nascondi() {
-    if (!statoAperto) {
-        document.getElementById("descrizione").innerText = '';
-    }
-}
-
-function toggle(testo) {
+function toggle(testo, link) {
     const box = document.getElementById("descrizione");
-    if (statoAperto === testo) {
-        statoAperto = '';
-        box.innerText = '';
-    } else {
-        statoAperto = testo;
-        box.innerText = testo;
+
+    if (aperto === testo) {
+        box.style.display = "none";
+        aperto = false;
+        return;
     }
+
+    box.innerHTML = `
+        ${testo}<br><br>
+        <a href="${link}">Scegli questo ingrediente</a>
+    `;
+    box.style.display = "block";
+    aperto = testo;
 }
 </script>
 
