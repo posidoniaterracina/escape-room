@@ -32,40 +32,44 @@ body{
 /* HOTSPOT */
 .hotspot{
     position:absolute;
-    width:26px;
-    height:26px;
+    width:28px;
+    height:28px;
     border-radius:50%;
-    background:#fff;
+    background:#ffffff;
     border:2px solid #ccc;
-    display:flex;
-    align-items:center;
-    justify-content:center;
     cursor:pointer;
+    transform:translate(-50%,-50%);
     transition:transform .2s ease;
+    z-index:3;
 }
 
 .hotspot:hover{
-    transform:scale(1.15);
+    transform:translate(-50%,-50%) scale(1.15);
 }
 
 .hotspot::after{
     content:"";
+    position:absolute;
+    top:50%;
+    left:50%;
     width:10px;
     height:10px;
     background:#555;
     border-radius:50%;
+    transform:translate(-50%,-50%);
 }
 
 /* LABEL */
 .label{
     position:absolute;
-    transform:translate(-50%,-160%);
+    transform:translate(-50%,-180%);
     background:rgba(255,255,255,.95);
     padding:4px 8px;
     border-radius:6px;
     font-size:12px;
     border:1px solid #ddd;
-    pointer-events:none;
+    pointer-events:none; /* fondamentale */
+    z-index:2;
 }
 
 /* BOX */
@@ -148,6 +152,8 @@ body{
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", function(){
+
 const hotspots=document.querySelectorAll(".hotspot");
 const box=document.getElementById("descrizione");
 
@@ -157,12 +163,11 @@ function mostraBox(testo,link){
         return;
     }
 
-    box.innerHTML=`
-        ${testo}
-        <div class="linkbox">
-            <a href="${encodeURI(link)}">Scegli questo ingrediente</a>
-        </div>
-    `;
+    box.innerHTML=
+        testo+
+        '<div class="linkbox">'+
+        '<a href="'+encodeURI(link)+'">Scegli questo ingrediente</a>'+
+        '</div>';
 
     box.dataset.contenuto=testo;
     box.classList.add("active");
@@ -172,16 +177,23 @@ function chiudiBox(){
     box.classList.remove("active");
 }
 
-hotspots.forEach(h=>{
-    h.addEventListener("click",()=>mostraBox(h.dataset.testo,h.dataset.link));
-    h.addEventListener("mouseenter",()=>mostraBox(h.dataset.testo,h.dataset.link));
+hotspots.forEach(function(h){
+    h.addEventListener("click",function(e){
+        e.stopPropagation();
+        mostraBox(h.dataset.testo,h.dataset.link);
+    });
+
+    h.addEventListener("mouseenter",function(){
+        mostraBox(h.dataset.testo,h.dataset.link);
+    });
 });
 
-/* chiusura clic fuori */
 document.addEventListener("click",function(e){
     if(!e.target.closest(".hotspot") && !e.target.closest("#descrizione")){
         chiudiBox();
     }
+});
+
 });
 </script>
 
