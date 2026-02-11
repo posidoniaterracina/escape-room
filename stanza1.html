@@ -39,12 +39,13 @@ body{
     border:2px solid #ccc;
     cursor:pointer;
     transform:translate(-50%,-50%);
-    transition:transform .2s ease;
+    transition:transform .2s ease, box-shadow .2s ease;
     z-index:3;
 }
 
 .hotspot:hover{
     transform:translate(-50%,-50%) scale(1.15);
+    box-shadow:0 0 10px rgba(0,0,0,0.3);
 }
 
 .hotspot::after{
@@ -59,20 +60,7 @@ body{
     transform:translate(-50%,-50%);
 }
 
-/* LABEL */
-.label{
-    position:absolute;
-    transform:translate(-50%,-180%);
-    background:rgba(255,255,255,.95);
-    padding:4px 8px;
-    border-radius:6px;
-    font-size:12px;
-    border:1px solid #ddd;
-    pointer-events:none; /* fondamentale */
-    z-index:2;
-}
-
-/* BOX */
+/* BOX DESCRIZIONE */
 #descrizione{
     margin:25px auto 0 auto;
     width:60%;
@@ -120,31 +108,26 @@ body{
      style="top:62%; left:32%;"
      data-testo="Spaghetti: 400g di pasta lunga, base fondamentale della carbonara."
      data-link="prosegui.html"></div>
-<div class="label" style="top:62%; left:32%;">Spaghetti</div>
 
 <div class="hotspot"
      style="top:45%; left:60%;"
      data-testo="Guanciale: rosolato fino a diventare croccante, ingrediente chiave."
      data-link="prosegui.html"></div>
-<div class="label" style="top:45%; left:60%;">Guanciale</div>
 
 <div class="hotspot"
      style="top:30%; left:42%;"
      data-testo="Uova: solo tuorli, cremosi e ricchi, fondamentali per la crema."
      data-link="prosegui.html"></div>
-<div class="label" style="top:30%; left:42%;">Uova</div>
 
 <div class="hotspot"
      style="top:72%; left:48%;"
      data-testo="Pecorino Romano: sapore deciso, grattugiato fine, indispensabile."
      data-link="prosegui.html"></div>
-<div class="label" style="top:72%; left:48%;">Pecorino</div>
 
 <div class="hotspot"
      style="top:20%; left:70%;"
      data-testo="Panna: ingrediente NON previsto nella carbonara tradizionale!"
      data-link="errore.html"></div>
-<div class="label" style="top:20%; left:70%;">Panna</div>
 
 </div>
 
@@ -190,12 +173,4 @@ hotspots.forEach(function(h){
 
 document.addEventListener("click",function(e){
     if(!e.target.closest(".hotspot") && !e.target.closest("#descrizione")){
-        chiudiBox();
-    }
-});
-
-});
-</script>
-
-</body>
-</html>
+        ch
