@@ -18,15 +18,15 @@
             border-radius: 10px;
         }
 
-        /* HOTSPOT IKEA STYLE */
+        /* HOTSPOT IKEA STYLE (senza bordo azzurro) */
         .hotspot {
             position: absolute;
             cursor: pointer;
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             background: #ffffff;
-            border: 3px solid #1a73e8;
+            border: 2px solid #ccc;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -35,17 +35,15 @@
             content: "";
             width: 10px;
             height: 10px;
-            background: #1a73e8;
+            background: #555;
             border-radius: 50%;
         }
 
         /* BOX DESCRIZIONE */
         #descrizione {
             margin-top: 25px;
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 18px;
             color: #333;
-            min-height: 60px;
             background: #ffffff;
             padding: 20px;
             border-radius: 12px;
@@ -56,12 +54,6 @@
             display: none;
         }
 
-        .scelta a {
-            color: #1a73e8;
-            font-weight: bold;
-            text-decoration: underline;
-        }
-
         .label {
             position: absolute;
             transform: translate(-50%, -160%);
@@ -70,6 +62,16 @@
             border-radius: 6px;
             font-size: 12px;
             border: 1px solid #ddd;
+        }
+
+        .linkbox {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .linkbox a {
+            color: #1a73e8;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -85,35 +87,35 @@
         <!-- SPAGHETTI -->
         <div class="hotspot"
              style="top: 62%; left: 32%;"
-             onclick="toggle('Spaghetti: 400g di pasta lunga, base fondamentale della carbonara.', 'prosegui.html')">
+             onclick="apriBox('Spaghetti: 400g di pasta lunga, base fondamentale della carbonara.', 'prosegui.html')">
         </div>
         <div class="label" style="top: 62%; left: 32%;">Spaghetti</div>
 
         <!-- GUANCIALE -->
         <div class="hotspot"
              style="top: 45%; left: 60%;"
-             onclick="toggle('Guanciale: rosolato fino a diventare croccante, ingrediente chiave.', 'prosegui.html')">
+             onclick="apriBox('Guanciale: rosolato fino a diventare croccante, ingrediente chiave.', 'prosegui.html')">
         </div>
         <div class="label" style="top: 45%; left: 60%;">Guanciale</div>
 
         <!-- UOVA -->
         <div class="hotspot"
              style="top: 30%; left: 42%;"
-             onclick="toggle('Uova: solo tuorli, cremosi e ricchi, fondamentali per la crema.', 'prosegui.html')">
+             onclick="apriBox('Uova: solo tuorli, cremosi e ricchi, fondamentali per la crema.', 'prosegui.html')">
         </div>
         <div class="label" style="top: 30%; left: 42%;">Uova</div>
 
         <!-- PECORINO -->
         <div class="hotspot"
              style="top: 72%; left: 48%;"
-             onclick="toggle('Pecorino Romano: sapore deciso, grattugiato fine, indispensabile.', 'prosegui.html')">
+             onclick="apriBox('Pecorino Romano: sapore deciso, grattugiato fine, indispensabile.', 'prosegui.html')">
         </div>
         <div class="label" style="top: 72%; left: 48%;">Pecorino</div>
 
-        <!-- INGREDIENTE SBAGLIATO (ESEMPIO: PANNA) -->
+        <!-- INGREDIENTE SBAGLIATO: PANNA -->
         <div class="hotspot"
              style="top: 20%; left: 70%;"
-             onclick="toggle('Panna: ingrediente NON previsto nella carbonara tradizionale!', 'errore.html')">
+             onclick="apriBox('Panna: ingrediente NON previsto nella carbonara tradizionale!', 'errore.html')">
         </div>
         <div class="label" style="top: 20%; left: 70%;">Panna</div>
 
@@ -123,23 +125,24 @@
 </div>
 
 <script>
-let aperto = false;
-
-function toggle(testo, link) {
+function apriBox(testo, link) {
     const box = document.getElementById("descrizione");
 
-    if (aperto === testo) {
+    // Se il box è già aperto con lo stesso testo → chiudi
+    if (box.style.display === "block" && box.dataset.contenuto === testo) {
         box.style.display = "none";
-        aperto = false;
         return;
     }
 
+    // Altrimenti apri e aggiorna contenuto
     box.innerHTML = `
-        ${testo}<br><br>
-        <a href="${link}">Scegli questo ingrediente</a>
+        ${testo}
+        <div class="linkbox">
+            <a href="${link}">Scegli questo ingrediente</a>
+        </div>
     `;
+    box.dataset.contenuto = testo;
     box.style.display = "block";
-    aperto = testo;
 }
 </script>
 
