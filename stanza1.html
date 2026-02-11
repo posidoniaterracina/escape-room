@@ -1,149 +1,188 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <title>Escape Room - Stanza 1</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-        }
-        img {
-            width: 70%;
-            border-radius: 10px;
-        }
+<meta charset="UTF-8">
+<title>Escape Room - Stanza 1</title>
 
-        /* HOTSPOT IKEA STYLE (senza bordo azzurro) */
-        .hotspot {
-            position: absolute;
-            cursor: pointer;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: #ffffff;
-            border: 2px solid #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .hotspot::after {
-            content: "";
-            width: 10px;
-            height: 10px;
-            background: #555;
-            border-radius: 50%;
-        }
+<style>
+body{
+    font-family:Arial, sans-serif;
+    background:#f4f4f4;
+    text-align:center;
+}
 
-        /* BOX DESCRIZIONE */
-        #descrizione {
-            margin-top: 25px;
-            font-size: 18px;
-            color: #333;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 12px;
-            width: 60%;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 0 12px rgba(0,0,0,0.15);
-            display: none;
-        }
+.container{
+    width:80%;
+    margin:auto;
+}
 
-        .label {
-            position: absolute;
-            transform: translate(-50%, -160%);
-            background: rgba(255,255,255,0.9);
-            padding: 3px 6px;
-            border-radius: 6px;
-            font-size: 12px;
-            border: 1px solid #ddd;
-        }
+.image-wrapper{
+    position:relative;
+    display:inline-block;
+    width:70%;
+}
 
-        .linkbox {
-            margin-top: 10px;
-            font-weight: bold;
-        }
+.image-wrapper img{
+    width:100%;
+    height:auto;
+    display:block;
+    border-radius:10px;
+}
 
-        .linkbox a {
-            color: #1a73e8;
-            text-decoration: underline;
-        }
-    </style>
+/* HOTSPOT */
+.hotspot{
+    position:absolute;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:#fff;
+    border:2px solid #ccc;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:transform .2s ease;
+}
+
+.hotspot:hover{
+    transform:scale(1.15);
+}
+
+.hotspot::after{
+    content:"";
+    width:10px;
+    height:10px;
+    background:#555;
+    border-radius:50%;
+}
+
+/* LABEL */
+.label{
+    position:absolute;
+    transform:translate(-50%,-160%);
+    background:rgba(255,255,255,.95);
+    padding:4px 8px;
+    border-radius:6px;
+    font-size:12px;
+    border:1px solid #ddd;
+    pointer-events:none;
+}
+
+/* BOX */
+#descrizione{
+    margin:25px auto 0 auto;
+    width:60%;
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 0 12px rgba(0,0,0,.15);
+    font-size:18px;
+    color:#333;
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(10px);
+    transition:all .25s ease;
+}
+
+#descrizione.active{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+}
+
+.linkbox{
+    margin-top:12px;
+    font-weight:bold;
+}
+
+.linkbox a{
+    color:#1a73e8;
+    text-decoration:underline;
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-    <h1>Stanza 1</h1>
-    <p>Per la ricetta della carbonara c’è un ingrediente di troppo… individualo!</p>
+<h1>Stanza 1</h1>
+<p>Per la ricetta della carbonara c’è un ingrediente di troppo… individualo!</p>
 
-    <div style="position: relative; display: inline-block;">
-        <img src="carbonara.jpg" alt="Carbonara">
+<div class="image-wrapper">
 
-        <!-- SPAGHETTI -->
-        <div class="hotspot"
-             style="top: 62%; left: 32%;"
-             onclick="apriBox('Spaghetti: 400g di pasta lunga, base fondamentale della carbonara.', 'prosegui.html')">
-        </div>
-        <div class="label" style="top: 62%; left: 32%;">Spaghetti</div>
+<img src="carbonara.jpg" alt="Carbonara">
 
-        <!-- GUANCIALE -->
-        <div class="hotspot"
-             style="top: 45%; left: 60%;"
-             onclick="apriBox('Guanciale: rosolato fino a diventare croccante, ingrediente chiave.', 'prosegui.html')">
-        </div>
-        <div class="label" style="top: 45%; left: 60%;">Guanciale</div>
+<div class="hotspot"
+     style="top:62%; left:32%;"
+     data-testo="Spaghetti: 400g di pasta lunga, base fondamentale della carbonara."
+     data-link="prosegui.html"></div>
+<div class="label" style="top:62%; left:32%;">Spaghetti</div>
 
-        <!-- UOVA -->
-        <div class="hotspot"
-             style="top: 30%; left: 42%;"
-             onclick="apriBox('Uova: solo tuorli, cremosi e ricchi, fondamentali per la crema.', 'prosegui.html')">
-        </div>
-        <div class="label" style="top: 30%; left: 42%;">Uova</div>
+<div class="hotspot"
+     style="top:45%; left:60%;"
+     data-testo="Guanciale: rosolato fino a diventare croccante, ingrediente chiave."
+     data-link="prosegui.html"></div>
+<div class="label" style="top:45%; left:60%;">Guanciale</div>
 
-        <!-- PECORINO -->
-        <div class="hotspot"
-             style="top: 72%; left: 48%;"
-             onclick="apriBox('Pecorino Romano: sapore deciso, grattugiato fine, indispensabile.', 'prosegui.html')">
-        </div>
-        <div class="label" style="top: 72%; left: 48%;">Pecorino</div>
+<div class="hotspot"
+     style="top:30%; left:42%;"
+     data-testo="Uova: solo tuorli, cremosi e ricchi, fondamentali per la crema."
+     data-link="prosegui.html"></div>
+<div class="label" style="top:30%; left:42%;">Uova</div>
 
-        <!-- INGREDIENTE SBAGLIATO: PANNA -->
-        <div class="hotspot"
-             style="top: 20%; left: 70%;"
-             onclick="apriBox('Panna: ingrediente NON previsto nella carbonara tradizionale!', 'errore.html')">
-        </div>
-        <div class="label" style="top: 20%; left: 70%;">Panna</div>
+<div class="hotspot"
+     style="top:72%; left:48%;"
+     data-testo="Pecorino Romano: sapore deciso, grattugiato fine, indispensabile."
+     data-link="prosegui.html"></div>
+<div class="label" style="top:72%; left:48%;">Pecorino</div>
 
-    </div>
+<div class="hotspot"
+     style="top:20%; left:70%;"
+     data-testo="Panna: ingrediente NON previsto nella carbonara tradizionale!"
+     data-link="errore.html"></div>
+<div class="label" style="top:20%; left:70%;">Panna</div>
 
-    <div id="descrizione"></div>
+</div>
+
+<div id="descrizione"></div>
 </div>
 
 <script>
-function apriBox(testo, link) {
-    const box = document.getElementById("descrizione");
+const hotspots=document.querySelectorAll(".hotspot");
+const box=document.getElementById("descrizione");
 
-    // Se il box è già aperto con lo stesso testo → chiudi
-    if (box.style.display === "block" && box.dataset.contenuto === testo) {
-        box.style.display = "none";
+function mostraBox(testo,link){
+    if(box.classList.contains("active") && box.dataset.contenuto===testo){
+        chiudiBox();
         return;
     }
 
-    // Altrimenti apri e aggiorna contenuto
-    box.innerHTML = `
+    box.innerHTML=`
         ${testo}
         <div class="linkbox">
-            <a href="${link}">Scegli questo ingrediente</a>
+            <a href="${encodeURI(link)}">Scegli questo ingrediente</a>
         </div>
     `;
-    box.dataset.contenuto = testo;
-    box.style.display = "block";
+
+    box.dataset.contenuto=testo;
+    box.classList.add("active");
 }
+
+function chiudiBox(){
+    box.classList.remove("active");
+}
+
+hotspots.forEach(h=>{
+    h.addEventListener("click",()=>mostraBox(h.dataset.testo,h.dataset.link));
+    h.addEventListener("mouseenter",()=>mostraBox(h.dataset.testo,h.dataset.link));
+});
+
+/* chiusura clic fuori */
+document.addEventListener("click",function(e){
+    if(!e.target.closest(".hotspot") && !e.target.closest("#descrizione")){
+        chiudiBox();
+    }
+});
 </script>
 
 </body>
