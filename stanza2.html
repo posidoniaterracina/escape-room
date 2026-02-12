@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Stanza 2 - Database</title>
+<style>
+body{font-family:Arial;background:#f4f4f4;text-align:center;}
+.container{width:80%;margin:auto;}
+.image-wrapper{position:relative;display:inline-block;width:70%;}
+.image-wrapper img{width:100%;border-radius:10px;}
+
+.hotspot{
+position:absolute;width:28px;height:28px;border-radius:50%;
+background:#fff;border:2px solid #ccc;cursor:pointer;
+transform:translate(-50%,-50%);transition:.2s;z-index:5;
+}
+.hotspot:hover{transform:translate(-50%,-50%) scale(1.15);}
+.hotspot::after{
+content:"";position:absolute;top:50%;left:50%;
+width:10px;height:10px;background:#555;border-radius:50%;
+transform:translate(-50%,-50%);
+}
+.tooltip{
+position:absolute;min-width:240px;background:#fff;padding:15px;
+border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,.25);
+font-size:14px;text-align:left;opacity:0;visibility:hidden;
+transform:translate(-50%,-120%) scale(.95);
+transition:.2s;z-index:10;
+}
+.tooltip.active{
+opacity:1;visibility:visible;
+transform:translate(-50%,-130%) scale(1);
+}
+.tooltip a{display:block;margin-top:10px;font-weight:bold;color:#1a73e8;}
+</style>
+</head>
+<body>
+
+<h1>Stanza 2</h1>
+<p>Quale elemento è errato nello schema database?</p>
+
+<div class="image-wrapper">
+<img src="Database.jpg">
+
+<!-- Quadrante 1 -->
+<div class="hotspot" style="top:25%; left:25%;"
+data-testo="Server rack corretto."
+data-link="errore.html"></div>
+
+<!-- Quadrante 2 -->
+<div class="hotspot" style="top:25%; left:75%;"
+data-testo="Mouse collegato correttamente."
+data-link="errore.html"></div>
+
+<!-- Quadrante 3 -->
+<div class="hotspot" style="top:75%; left:25%;"
+data-testo="Schema ER con relazione 1:N corretta."
+data-link="errore.html"></div>
+
+<!-- QUADRANTE 4 CORRETTO -->
+<div class="hotspot" style="top:75%; left:75%;"
+data-testo="Errore! Due chiavi primarie nella stessa tabella."
+data-link="stanza3.html"></div>
+
+</div>
+
+<script>
+document.querySelectorAll(".hotspot").forEach(function(h){
+const tooltip=document.createElement("div");
+tooltip.className="tooltip";
+tooltip.innerHTML=h.dataset.testo+
+'<a href="'+h.dataset.link+'">Seleziona</a>';
+h.parentElement.appendChild(tooltip);
+
+h.addEventListener("click",function(e){
+e.stopPropagation();
+document.querySelectorAll(".tooltip").forEach(t=>t.classList.remove("active"));
+tooltip.style.top=h.style.top;
+tooltip.style.left=h.style.left;
+tooltip.classList.toggle("active");
+});
+});
+document.addEventListener("click",function(){
+document.querySelectorAll(".tooltip").forEach(t=>t.classList.remove("active"));
+});
+</script>
+
+</body>
+</html>
