@@ -121,6 +121,44 @@ transform:translateX(-50%);
 }
 
 }
+
+/* MOBILE PANEL */
+.mobile-panel{
+display:none;
+margin:30px auto;
+width:92%;
+max-width:500px;
+background:#ffffff;
+padding:20px;
+border-radius:16px;
+box-shadow:0 10px 25px rgba(0,0,0,.12);
+text-align:left;
+}
+
+.progress-bar{
+background:#eee;
+height:8px;
+border-radius:10px;
+margin-top:8px;
+overflow:hidden;
+}
+
+.progress-fill{
+width:10%;
+height:8px;
+background:#1a73e8;
+}
+
+.timer{
+margin-top:15px;
+font-weight:bold;
+}
+
+@media (max-width:768px) and (orientation:portrait){
+.mobile-panel{
+display:block;
+}
+}
 </style>
 </head>
 
@@ -170,7 +208,50 @@ data-link="stanza2.html"></div>
 
 </div>
 
+<!-- MOBILE PANEL -->
+<div class="mobile-panel">
+
+<h3>Missione</h3>
+<p>Ricostruisci la ricetta autentica della tradizione romana.</p>
+
+<div>
+<div>Livello 1 di 10</div>
+<div class="progress-bar">
+<div class="progress-fill"></div>
+</div>
+</div>
+
+<div class="timer">
+Tempo totale: <span id="timer">00:00</span>
+</div>
+
+</div>
+
 <script>
+
+/* AVVIO TIMER GLOBALE SOLO SE NON ESISTE */
+if(!localStorage.getItem("startTime")){
+localStorage.setItem("startTime", Date.now());
+}
+
+/* TIMER REALE BASATO SU startTime */
+function aggiornaTimer(){
+let start = parseInt(localStorage.getItem("startTime"));
+let now = Date.now();
+let diff = Math.floor((now - start)/1000);
+
+let min = Math.floor(diff/60);
+let sec = diff%60;
+
+document.getElementById("timer").innerText =
+String(min).padStart(2,'0')+":"+
+String(sec).padStart(2,'0');
+}
+
+setInterval(aggiornaTimer,1000);
+aggiornaTimer();
+
+/* HOTSPOT */
 document.querySelectorAll(".hotspot").forEach(function(h){
 
 const tooltip=document.createElement("div");
