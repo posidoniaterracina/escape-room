@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escape Room SIA</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#1e1e2f,#2c2c3c);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+text-align:center;
+}
+
+.container{
+max-width:600px;
+padding:40px;
+background:rgba(0,0,0,.4);
+border-radius:20px;
+box-shadow:0 20px 50px rgba(0,0,0,.5);
+}
+
+h1{
+margin-top:0;
+font-size:28px;
+}
+
+p{
+line-height:1.6;
+margin:20px 0;
+}
+
+button{
+margin-top:25px;
+padding:14px 28px;
+font-size:18px;
+border:none;
+border-radius:12px;
+background:#1a73e8;
+color:white;
+cursor:pointer;
+transition:.2s;
+}
+
+button:hover{
+background:#155cc0;
+transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Escape Room – Missione SIA</h1>
+
+<p>
+Il sistema dell’istituto è stato compromesso.<br>
+Solo chi saprà individuare gli errori nascosti potrà ripristinare l’accesso.
+</p>
+
+<p>
+Supera le stanze, analizza con attenzione e trova l’incoerenza in ogni scenario.
+Il tempo scorre.
+</p>
+
+<button onclick="inizia()">🚀 Inizia la missione</button>
+
+</div>
+
+<script>
+function inizia(){
+    // Reset timer e partita
+    localStorage.removeItem("startTime");
+    localStorage.setItem("startTime", Date.now());
+
+    window.location.href="stanza1.html";
+}
+</script>
+
+</body>
+</html>
