@@ -7,85 +7,86 @@
 
 <style>
 body{
-font-family:Arial;
-background:#f4f4f4;
-margin:0;
-padding:0;
-text-align:center;
+  font-family:Arial;
+  background:#f4f4f4;
+  margin:0;
+  padding:0;
+  text-align:center;
 }
 
 h1{margin-top:30px;}
 
 .grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-width:90%;
-max-width:800px;
-margin:30px auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  width:90%;
+  max-width:800px;
+  margin:30px auto;
 }
 
 .dropzone{
-background:#ffffff;
-border:3px dashed #999;
-border-radius:12px;
-padding:20px;
-min-height:160px;
-display:flex;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-transition:.3s;
-position:relative;
+  background:#ffffff;
+  border:3px dashed #999;
+  border-radius:12px;
+  padding:20px;
+  min-height:160px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  transition:.3s;
+  position:relative;
 }
 
 .dropzone.correct{
-border-color:#28a745;
-background:#eaf8ef;
+  border-color:#28a745;
+  background:#eaf8ef;
 }
 
 .dropzone.wrong{
-border-color:#dc3545;
-background:#fdeaea;
+  border-color:#dc3545;
+  background:#fdeaea;
 }
 
 .dropzone img{
-width:110px;
-height:140px;
-object-fit:cover;
-border-radius:8px;
-margin-bottom:10px;
+  width:110px;
+  height:140px;
+  object-fit:cover;
+  border-radius:8px;
+  margin-bottom:10px;
 }
 
 .draggables{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:15px;
-margin:30px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:15px;
+  margin:30px;
+  position:relative; /* importante per il posizionamento assoluto */
 }
 
 .draggable{
-background:#1a73e8;
-color:white;
-padding:12px 16px;
-border-radius:10px;
-cursor:grab;
-position:relative;
-touch-action:none;
-max-width:280px;
-transition:.2s;
+  background:#1a73e8;
+  color:white;
+  padding:12px 16px;
+  border-radius:10px;
+  cursor:grab;
+  position:relative;
+  touch-action:none;
+  max-width:280px;
+  transition:.2s;
 }
 
-.dragging{
-position:absolute;
-z-index:1000;
-pointer-events:none;
-opacity:.9;
+.draggable.dragging{
+  position:absolute;   /* durante il drag */
+  z-index:1000;
+  pointer-events:none;
+  opacity:.9;
 }
 
 @media (max-width:768px){
-.grid{grid-template-columns:1fr;}
+  .grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -97,172 +98,169 @@ opacity:.9;
 
 <div class="grid">
 
-<div class="dropzone" data-person="leonardo">
-<img src="leonardo.jpg">
-<div>Leonardo da Vinci</div>
-</div>
+  <div class="dropzone" data-person="leonardo">
+    <img src="leonardo.jpg" alt="Leonardo da Vinci">
+    <div>Leonardo da Vinci</div>
+  </div>
 
-<div class="dropzone" data-person="dante">
-<img src="dante.jpg">
-<div>Dante Alighieri</div>
-</div>
+  <div class="dropzone" data-person="dante">
+    <img src="dante.jpg" alt="Dante Alighieri">
+    <div>Dante Alighieri</div>
+  </div>
 
-<div class="dropzone" data-person="mozart">
-<img src="mozart.jpg">
-<div>Wolfgang Amadeus Mozart</div>
-</div>
+  <div class="dropzone" data-person="mozart">
+    <img src="mozart.jpg" alt="Wolfgang Amadeus Mozart">
+    <div>Wolfgang Amadeus Mozart</div>
+  </div>
 
-<div class="dropzone" data-person="einstein">
-<img src="einstein.jpg">
-<div>Albert Einstein</div>
-</div>
+  <div class="dropzone" data-person="einstein">
+    <img src="einstein.jpg" alt="Albert Einstein">
+    <div>Albert Einstein</div>
+  </div>
 
 </div>
 
 <div class="draggables">
 
-<div class="draggable" data-match="mozart">
-"La musica non è nelle note, ma nel silenzio tra di esse."
-</div>
+  <div class="draggable" data-match="mozart">
+    "La musica non è nelle note, ma nel silenzio tra di esse."
+  </div>
 
-<div class="draggable" data-match="dante">
-"Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura."
-</div>
+  <div class="draggable" data-match="dante">
+    "Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura."
+  </div>
 
-<div class="draggable" data-match="einstein">
-"La fantasia è più importante della conoscenza."
-</div>
+  <div class="draggable" data-match="einstein">
+    "La fantasia è più importante della conoscenza."
+  </div>
 
-<div class="draggable" data-match="leonardo">
-"La semplicità è la massima sofisticazione."
-</div>
+  <div class="draggable" data-match="leonardo">
+    "La semplicità è la massima sofisticazione."
+  </div>
 
 </div>
 
 <script>
-
 let current = null;
 let offsetX = 0;
 let offsetY = 0;
 
 document.querySelectorAll(".draggable").forEach(item=>{
-
-item.addEventListener("mousedown", startDrag);
-item.addEventListener("touchstart", startDrag);
-
+  item.addEventListener("mousedown", startDrag);
+  item.addEventListener("touchstart", startDrag, {passive:false});
 });
 
 function startDrag(e){
+  e.preventDefault();
 
-current = this;
-current.classList.add("dragging");
+  current = this;
+  current.classList.add("dragging");
 
-const rect = current.getBoundingClientRect();
+  const rect = current.getBoundingClientRect();
 
-if(e.type === "touchstart"){
-offsetX = e.touches[0].clientX - rect.left;
-offsetY = e.touches[0].clientY - rect.top;
-}else{
-offsetX = e.clientX - rect.left;
-offsetY = e.clientY - rect.top;
-}
+  if(e.type === "touchstart"){
+    offsetX = e.touches[0].clientX - rect.left;
+    offsetY = e.touches[0].clientY - rect.top;
+  }else{
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+  }
 
-document.addEventListener("mousemove", drag);
-document.addEventListener("touchmove", drag, {passive:false});
-document.addEventListener("mouseup", endDrag);
-document.addEventListener("touchend", endDrag);
+  document.addEventListener("mousemove", drag);
+  document.addEventListener("touchmove", drag, {passive:false});
+  document.addEventListener("mouseup", endDrag);
+  document.addEventListener("touchend", endDrag);
 }
 
 function drag(e){
+  if(!current) return;
 
-if(!current) return;
+  e.preventDefault();
 
-e.preventDefault();
+  let x, y;
 
-let x, y;
+  if(e.type === "touchmove"){
+    x = e.touches[0].clientX;
+    y = e.touches[0].clientY;
+  }else{
+    x = e.clientX;
+    y = e.clientY;
+  }
 
-if(e.type === "touchmove"){
-x = e.touches[0].clientX;
-y = e.touches[0].clientY;
-}else{
-x = e.clientX;
-y = e.clientY;
+  current.style.left = (x - offsetX) + "px";
+  current.style.top = (y - offsetY) + "px";
 }
 
-current.style.left = (x - offsetX) + "px";
-current.style.top = (y - offsetY) + "px";
-}
+function endDrag(e){
+  if(!current) return;
 
-function endDrag(){
+  let dropped = false;
 
-if(!current) return;
+  const itemRect = current.getBoundingClientRect();
 
-let dropped = false;
+  document.querySelectorAll(".dropzone").forEach(zone=>{
+    const rect = zone.getBoundingClientRect();
 
-document.querySelectorAll(".dropzone").forEach(zone=>{
-const rect = zone.getBoundingClientRect();
-const itemRect = current.getBoundingClientRect();
+    if(
+      itemRect.left < rect.right &&
+      itemRect.right > rect.left &&
+      itemRect.top < rect.bottom &&
+      itemRect.bottom > rect.top
+    ){
+      zone.appendChild(current);
+      current.style.position="relative";
+      current.style.left="0";
+      current.style.top="0";
+      current.classList.remove("dragging");
+      checkMatch(zone, current);
+      dropped = true;
+    }
+  });
 
-if(
-itemRect.left < rect.right &&
-itemRect.right > rect.left &&
-itemRect.top < rect.bottom &&
-itemRect.bottom > rect.top
-){
-zone.appendChild(current);
-current.style.position="relative";
-current.style.left="0";
-current.style.top="0";
-checkMatch(zone, current);
-dropped = true;
-}
-});
+  if(!dropped){
+    resetPosition(current);
+  }
 
-if(!dropped){
-resetPosition(current);
-}
+  current.classList.remove("dragging");
+  current = null;
 
-current.classList.remove("dragging");
-current = null;
-
-document.removeEventListener("mousemove", drag);
-document.removeEventListener("touchmove", drag);
-document.removeEventListener("mouseup", endDrag);
-document.removeEventListener("touchend", endDrag);
+  document.removeEventListener("mousemove", drag);
+  document.removeEventListener("touchmove", drag, {passive:false});
+  document.removeEventListener("mouseup", endDrag);
+  document.removeEventListener("touchend", endDrag);
 }
 
 function resetPosition(item){
-item.style.position="relative";
-item.style.left="0";
-item.style.top="0";
-document.querySelector(".draggables").appendChild(item);
+  item.style.position="relative";
+  item.style.left="0";
+  item.style.top="0";
+  item.classList.remove("dragging");
+  document.querySelector(".draggables").appendChild(item);
 }
 
 function checkMatch(zone, item){
+  if(zone.dataset.person === item.dataset.match){
+    zone.classList.add("correct");
+    item.style.pointerEvents="none";
+  }else{
+    zone.classList.add("wrong");
+    setTimeout(()=>{
+      zone.classList.remove("wrong");
+      resetPosition(item);
+    },700);
+  }
 
-if(zone.dataset.person === item.dataset.match){
-zone.classList.add("correct");
-item.style.pointerEvents="none";
-}else{
-zone.classList.add("wrong");
-setTimeout(()=>{
-zone.classList.remove("wrong");
-resetPosition(item);
-},700);
-}
-
-checkWin();
+  checkWin();
 }
 
 function checkWin(){
-let correct = document.querySelectorAll(".dropzone.correct").length;
-if(correct === 4){
-setTimeout(()=>{
-window.location.href="stanza6.html";
-},800);
+  let correct = document.querySelectorAll(".dropzone.correct").length;
+  if(correct === 4){
+    setTimeout(()=>{
+      window.location.href="stanza6.html";
+    },800);
+  }
 }
-}
-
 </script>
 
 </body>
