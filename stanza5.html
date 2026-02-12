@@ -7,84 +7,80 @@
 
 <style>
 body{
-font-family:Arial;
-background:#f4f4f4;
-margin:0;
-padding:0;
-text-align:center;
+  font-family:Arial;
+  background:#f4f4f4;
+  margin:0;
+  padding:0;
+  text-align:center;
 }
 
 h1{margin-top:30px;}
 
 .grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-width:90%;
-max-width:800px;
-margin:30px auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  width:90%;
+  max-width:800px;
+  margin:30px auto;
 }
 
 .dropzone{
-background:#ffffff;
-border:3px dashed #999;
-border-radius:12px;
-padding:20px;
-min-height:180px;
-display:flex;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-transition:.3s;
+  background:#ffffff;
+  border:3px dashed #999;
+  border-radius:12px;
+  padding:20px;
+  min-height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  transition:.3s;
 }
 
 .dropzone.correct{
-border-color:#28a745;
-background:#eaf8ef;
+  border-color:#28a745;
+  background:#eaf8ef;
 }
 
 .dropzone.wrong{
-border-color:#dc3545;
-background:#fdeaea;
+  border-color:#dc3545;
+  background:#fdeaea;
 }
 
 .dropzone img{
-width:110px;
-height:140px;
-object-fit:cover;
-border-radius:8px;
-margin-bottom:10px;
+  width:110px;
+  height:140px;
+  object-fit:cover;
+  border-radius:8px;
+  margin-bottom:10px;
 }
 
 .draggables{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:15px;
-margin:30px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:15px;
+  margin:30px;
 }
 
 .draggable{
-background:#1a73e8;
-color:white;
-padding:12px 16px;
-border-radius:10px;
-cursor:grab;
-touch-action:none;
-max-width:280px;
-transition:.2s;
-position:relative;
+  background:#1a73e8;
+  color:white;
+  padding:12px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  max-width:280px;
+  transition:.2s;
 }
 
-.dragging{
-position:fixed;
-z-index:1000;
-opacity:.95;
-pointer-events:none;
+.draggable.selected{
+  background:#0b57d0;
+  transform:scale(1.05);
 }
 
 @media (max-width:768px){
-.grid{grid-template-columns:1fr;}
+  .grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -96,165 +92,90 @@ pointer-events:none;
 
 <div class="grid">
 
-<div class="dropzone" data-person="leonardo">
-<img src="leonardo.jpg">
-<div>Leonardo da Vinci</div>
-</div>
+  <div class="dropzone" data-person="leonardo">
+    <img src="leonardo.jpg">
+    <div>Leonardo da Vinci</div>
+  </div>
 
-<div class="dropzone" data-person="dante">
-<img src="dante.jpg">
-<div>Dante Alighieri</div>
-</div>
+  <div class="dropzone" data-person="dante">
+    <img src="dante.jpg">
+    <div>Dante Alighieri</div>
+  </div>
 
-<div class="dropzone" data-person="mozart">
-<img src="mozart.jpg">
-<div>Wolfgang Amadeus Mozart</div>
-</div>
+  <div class="dropzone" data-person="mozart">
+    <img src="mozart.jpg">
+    <div>Wolfgang Amadeus Mozart</div>
+  </div>
 
-<div class="dropzone" data-person="einstein">
-<img src="einstein.jpg">
-<div>Albert Einstein</div>
-</div>
+  <div class="dropzone" data-person="einstein">
+    <img src="einstein.jpg">
+    <div>Albert Einstein</div>
+  </div>
 
 </div>
 
 <div class="draggables">
 
-<div class="draggable" data-match="mozart">
-"La musica non è nelle note, ma nel silenzio tra di esse."
-</div>
+  <div class="draggable" data-match="mozart">
+    "La musica non è nelle note, ma nel silenzio tra di esse."
+  </div>
 
-<div class="draggable" data-match="dante">
-"Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura."
-</div>
+  <div class="draggable" data-match="dante">
+    "Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura."
+  </div>
 
-<div class="draggable" data-match="einstein">
-"La fantasia è più importante della conoscenza."
-</div>
+  <div class="draggable" data-match="einstein">
+    "La fantasia è più importante della conoscenza."
+  </div>
 
-<div class="draggable" data-match="leonardo">
-"La semplicità è la massima sofisticazione."
-</div>
+  <div class="draggable" data-match="leonardo">
+    "La semplicità è la massima sofisticazione."
+  </div>
 
 </div>
 
 <script>
 
-let current = null;
+let selected = null;
 
-/* START DRAG */
+/* SELEZIONE FRASE */
 document.querySelectorAll(".draggable").forEach(item=>{
-item.addEventListener("touchstart", startDrag, {passive:false});
-item.addEventListener("mousedown", startDrag);
+  item.addEventListener("click", ()=>{
+    
+    document.querySelectorAll(".draggable").forEach(i=>i.classList.remove("selected"));
+    
+    selected = item;
+    item.classList.add("selected");
+  });
 });
 
-function startDrag(e){
-
-e.preventDefault();
-
-current = this;
-current.classList.add("dragging");
-
-moveAt(e);
-
-document.addEventListener("touchmove", moveAt, {passive:false});
-document.addEventListener("mousemove", moveAt);
-
-document.addEventListener("touchend", endDrag);
-document.addEventListener("mouseup", endDrag);
-}
-
-/* MOVE */
-function moveAt(e){
-
-if(!current) return;
-
-let x, y;
-
-if(e.touches){
-x = e.touches[0].clientX;
-y = e.touches[0].clientY;
-}else{
-x = e.clientX;
-y = e.clientY;
-}
-
-current.style.left = (x - current.offsetWidth/2) + "px";
-current.style.top  = (y - current.offsetHeight/2) + "px";
-}
-
-/* END DRAG */
-function endDrag(){
-
-if(!current) return;
-
-let dropped = false;
-
+/* CLICK SULLA DROPZONE */
 document.querySelectorAll(".dropzone").forEach(zone=>{
-const rect = zone.getBoundingClientRect();
-const itemRect = current.getBoundingClientRect();
+  zone.addEventListener("click", ()=>{
 
-if(
-itemRect.left < rect.right &&
-itemRect.right > rect.left &&
-itemRect.top < rect.bottom &&
-itemRect.bottom > rect.top
-){
-zone.appendChild(current);
-current.style.position="relative";
-current.style.left="0";
-current.style.top="0";
-checkMatch(zone, current);
-dropped = true;
-}
+    if(!selected) return;
+
+    if(zone.dataset.person === selected.dataset.match){
+      zone.classList.add("correct");
+      zone.appendChild(selected);
+      selected.classList.remove("selected");
+      selected.style.pointerEvents="none";
+      selected = null;
+    } else {
+      zone.classList.add("wrong");
+      setTimeout(()=> zone.classList.remove("wrong"), 600);
+    }
+
+    checkWin();
+  });
 });
-
-if(!dropped){
-resetPosition(current);
-}
-
-current.classList.remove("dragging");
-current = null;
-
-document.removeEventListener("touchmove", moveAt);
-document.removeEventListener("mousemove", moveAt);
-document.removeEventListener("touchend", endDrag);
-document.removeEventListener("mouseup", endDrag);
-}
-
-/* RESET */
-function resetPosition(item){
-item.style.position="relative";
-item.style.left="0";
-item.style.top="0";
-document.querySelector(".draggables").appendChild(item);
-}
-
-/* VALIDAZIONE */
-function checkMatch(zone, item){
-
-if(zone.dataset.person === item.dataset.match){
-zone.classList.add("correct");
-item.style.pointerEvents="none";
-}else{
-zone.classList.add("wrong");
-setTimeout(()=>{
-zone.classList.remove("wrong");
-resetPosition(item);
-},700);
-}
-
-checkWin();
-}
 
 /* CONTROLLO VITTORIA */
 function checkWin(){
-let correct = document.querySelectorAll(".dropzone.correct").length;
-if(correct === 4){
-setTimeout(()=>{
-window.location.href="stanza6.html";
-},800);
-}
+  let correct = document.querySelectorAll(".dropzone.correct").length;
+  if(correct === 4){
+    setTimeout(()=> window.location.href="stanza6.html", 800);
+  }
 }
 
 </script>
