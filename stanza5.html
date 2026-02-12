@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stanza 5</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f4f4f4;
+margin:0;
+padding:0;
+text-align:center;
+}
+
+h1{margin-top:30px;}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+width:90%;
+max-width:800px;
+margin:30px auto;
+}
+
+.dropzone{
+background:#ffffff;
+border:3px dashed #999;
+border-radius:12px;
+padding:30px 10px;
+min-height:120px;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+font-weight:bold;
+transition:.3s;
+}
+
+.dropzone.correct{
+border-color:#28a745;
+background:#eaf8ef;
+}
+
+.dropzone.wrong{
+border-color:#dc3545;
+background:#fdeaea;
+}
+
+.draggables{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+margin:30px;
+}
+
+.draggable{
+background:#1a73e8;
+color:white;
+padding:12px 16px;
+border-radius:10px;
+cursor:grab;
+user-select:none;
+touch-action:none;
+max-width:280px;
+}
+
+@media (max-width:768px){
+.grid{
+grid-template-columns:1fr;
+}
+}
+</style>
+</head>
+
+<body>
+
+<h1>Stanza 5</h1>
+<p>Associa ogni citazione al personaggio corretto.</p>
+
+<div class="grid">
+
+<div class="dropzone" data-person="leonardo">Leonardo da Vinci</div>
+<div class="dropzone" data-person="dante">Dante Alighieri</div>
+<div class="dropzone" data-person="mozart">Wolfgang Amadeus Mozart</div>
+<div class="dropzone" data-person="einstein">Albert Einstein</div>
+
+</div>
+
+<div class="draggables">
+
+<div class="draggable" draggable="true" data-match="mozart">
+"La musica non è nelle note, ma nel silenzio tra di esse."
+</div>
+
+<div class="draggable" draggable="true" data-match="dante">
+"Nel mezzo del cammin di nostra vita mi ritrovai per una selva oscura."
+</div>
+
+<div class="draggable" draggable="true" data-match="einstein">
+"La fantasia è più importante della conoscenza."
+</div>
+
+<div class="draggable" draggable="true" data-match="leonardo">
+"La semplicità è la massima sofisticazione."
+</div>
+
+</div>
+
+<script>
+
+let dragged = null;
+
+/* DRAG DESKTOP */
+document.querySelectorAll(".draggable").forEach(item=>{
+item.addEventListener("dragstart", function(){
+dragged = this;
+});
+});
+
+/* DROP */
+document.querySelectorAll(".dropzone").forEach(zone=>{
+
+zone.addEventListener("dragover", function(e){
+e.preventDefault();
+});
+
+zone.addEventListener("drop", function(e){
+e.preventDefault();
+if(!dragged) return;
+
+this.appendChild(dragged);
+
+checkMatch(this, dragged);
+});
+
+});
+
+/* MOBILE TOUCH */
+document.querySelectorAll(".draggable").forEach(item=>{
+item.addEventListener("touchstart", function(){
+dragged = this;
+});
+});
+
+document.querySelectorAll(".dropzone").forEach(zone=>{
+zone.addEventListener("touchend", function(){
+if(!dragged) return;
+this.appendChild(dragged);
+checkMatch(this, dragged);
+});
+});
+
+/* VALIDAZIONE */
+function checkMatch(zone, item){
+
+if(zone.dataset.person === item.dataset.match){
+zone.classList.remove("wrong");
+zone.classList.add("correct");
+item.style.pointerEvents="none";
+}else{
+zone.classList.add("wrong");
+setTimeout(()=>{
+zone.classList.remove("wrong");
+document.querySelector(".draggables").appendChild(item);
+},800);
+}
+
+checkWin();
+}
+
+/* CONTROLLO VITTORIA */
+function checkWin(){
+let correct = document.querySelectorAll(".dropzone.correct").length;
+if(correct === 4){
+setTimeout(()=>{
+window.location.href="stanza6.html";
+},800);
+}
+}
+
+</script>
+
+</body>
+</html>
