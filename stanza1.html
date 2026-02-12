@@ -1,19 +1,41 @@
-<
 <!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stanza 1</title>
 
 <style>
-body{font-family:Arial;background:#f4f4f4;text-align:center;}
-.container{width:80%;margin:auto;}
-.image-wrapper{position:relative;display:inline-block;width:70%;}
-.image-wrapper img{width:100%;border-radius:10px;}
+body{
+font-family:Arial, sans-serif;
+background:#f4f4f4;
+text-align:center;
+margin:0;
+padding:0;
+}
 
+h1{margin-top:30px;}
+p{margin-bottom:20px;}
+
+.image-wrapper{
+position:relative;
+display:inline-block;
+width:80%;
+max-width:1000px;
+}
+
+.image-wrapper img{
+width:100%;
+height:auto;
+border-radius:12px;
+display:block;
+}
+
+/* HOTSPOT */
 .hotspot{
 position:absolute;
-width:28px;height:28px;
+width:28px;
+height:28px;
 border-radius:50%;
 background:#fff;
 border:2px solid #ccc;
@@ -22,23 +44,29 @@ transform:translate(-50%,-50%);
 transition:.2s;
 z-index:5;
 }
+
 .hotspot:hover{
 transform:translate(-50%,-50%) scale(1.15);
 box-shadow:0 0 8px rgba(0,0,0,.3);
 }
+
 .hotspot::after{
 content:"";
 position:absolute;
-top:50%;left:50%;
-width:10px;height:10px;
+top:50%;
+left:50%;
+width:10px;
+height:10px;
 background:#555;
 border-radius:50%;
 transform:translate(-50%,-50%);
 }
 
+/* TOOLTIP DESKTOP */
 .tooltip{
 position:absolute;
 min-width:240px;
+max-width:280px;
 background:#fff;
 padding:15px;
 border-radius:12px;
@@ -51,17 +79,47 @@ transform:translate(-50%,-120%) scale(.95);
 transition:.2s;
 z-index:10;
 }
+
 .tooltip.active{
 opacity:1;
 visibility:visible;
 transform:translate(-50%,-130%) scale(1);
 }
+
 .tooltip a{
 display:block;
 margin-top:10px;
 font-weight:bold;
 color:#1a73e8;
 text-decoration:underline;
+}
+
+/* MOBILE */
+@media (max-width:768px){
+
+.image-wrapper{
+width:95%;
+}
+
+.hotspot{
+width:36px;
+height:36px;
+}
+
+.tooltip{
+position:fixed;
+bottom:20px;
+left:50% !important;
+top:auto !important;
+transform:translateX(-50%);
+width:90%;
+max-width:420px;
+}
+
+.tooltip.active{
+transform:translateX(-50%);
+}
+
 }
 </style>
 </head>
@@ -76,38 +134,38 @@ text-decoration:underline;
 
 <!-- SPAGHETTI -->
 <div class="hotspot"
-style="top:38%; left:15%;"
-data-testo="Spaghetti: 400 g di pasta lunga trafilata al bronzo, ideale per trattenere la crema di uova e pecorino."
+style="top:38%; left:28%;"
+data-testo="Spaghetti: 400 g di pasta lunga, ideali per trattenere la crema di tuorli e pecorino."
 data-link="errore.html"></div>
 
 <!-- UOVA -->
 <div class="hotspot"
 style="top:42%; left:48%;"
-data-testo="Uova: 4 tuorli freschi, fondamentali per ottenere una crema vellutata senza aggiunta di panna."
+data-testo="Uova: 4 tuorli freschi per ottenere una crema vellutata."
 data-link="errore.html"></div>
 
 <!-- GUANCIALE -->
 <div class="hotspot"
 style="top:48%; left:68%;"
-data-testo="Guanciale: circa 150 g, rosolato lentamente fino a diventare croccante e rilasciare il suo grasso."
+data-testo="Guanciale: circa 150 g, rosolato lentamente per rilasciare il suo grasso aromatico."
 data-link="errore.html"></div>
 
 <!-- PECORINO -->
 <div class="hotspot"
 style="top:78%; left:63%;"
-data-testo="Pecorino Romano: 80-100 g grattugiato finemente, dona sapidità e struttura alla crema."
+data-testo="Pecorino Romano: 80-100 g grattugiato finemente, elemento fondamentale per la sapidità."
 data-link="errore.html"></div>
 
 <!-- PEPE -->
 <div class="hotspot"
-style="top:60%; left:30%;"
-data-testo="Pepe nero macinato fresco: elemento essenziale per bilanciare la sapidità del pecorino."
+style="top:70%; left:44%;"
+data-testo="Pepe nero macinato fresco: completa il piatto con nota aromatica decisa."
 data-link="errore.html"></div>
 
 <!-- PANNA -->
 <div class="hotspot"
 style="top:28%; left:83%;"
-data-testo="Panna da cucina: 50 gr da aggiungere all’uovo."
+data-testo="Panna da cucina: per aggiungere cremosità all’uovo."
 data-link="stanza2.html"></div>
 
 </div>
