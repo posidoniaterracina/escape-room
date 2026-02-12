@@ -71,15 +71,18 @@ padding:12px 16px;
 border-radius:10px;
 cursor:grab;
 max-width:280px;
-position:relative;
-touch-action:none;
 }
 
-.dragging{
+.drag-preview{
 position:fixed;
-z-index:1000;
+z-index:9999;
 pointer-events:none;
 opacity:.95;
+background:#1a73e8;
+color:white;
+padding:12px 16px;
+border-radius:10px;
+max-width:280px;
 }
 
 @media (max-width:768px){
@@ -139,9 +142,8 @@ opacity:.95;
 
 <script>
 
-let current = null;
-let offsetX = 0;
-let offsetY = 0;
+let draggedItem = null;
+let preview = null;
 
 document.querySelectorAll(".draggable").forEach(item=>{
 item.addEventListener("pointerdown", startDrag);
@@ -149,84 +151,72 @@ item.addEventListener("pointerdown", startDrag);
 
 function startDrag(e){
 
-current = e.target;
+draggedItem = e.currentTarget;
 
-const rect = current.getBoundingClientRect();
+preview = draggedItem.cloneNode(true);
+preview.classList.add("drag-preview");
+document.body.appendChild(preview);
 
-offsetX = e.clientX - rect.left;
-offsetY = e.clientY - rect.top;
+movePreview(e);
 
-current.classList.add("dragging");
-
-document.addEventListener("pointermove", drag);
+document.addEventListener("pointermove", movePreview);
 document.addEventListener("pointerup", endDrag);
 }
 
-function drag(e){
+function movePreview(e){
+if(!preview) return;
 
-if(!current) return;
-
-current.style.left = (e.clientX - offsetX) + "px";
-current.style.top  = (e.clientY - offsetY) + "px";
+preview.style.left = (e.clientX - preview.offsetWidth/2) + "px";
+preview.style.top  = (e.clientY - preview.offsetHeight/2) + "px";
 }
 
-function endDrag(){
+function endDrag(e){
 
-if(!current) return;
+if(!preview) return;
 
-let dropped = false;
+let targetZone = null;
 
 document.querySelectorAll(".dropzone").forEach(zone=>{
 const rect = zone.getBoundingClientRect();
-const itemRect = current.getBoundingClientRect();
 
 if(
-itemRect.left < rect.right &&
-itemRect.right > rect.left &&
-itemRect.top < rect.bottom &&
-itemRect.bottom > rect.top
+e.clientX > rect.left &&
+e.clientX < rect.right &&
+e.clientY > rect.top &&
+e.clientY < rect.bottom
 ){
-zone.appendChild(current);
-current.style.position="relative";
-current.style.left="0";
-current.style.top="0";
-checkMatch(zone, current);
-dropped = true;
+targetZone = zone;
 }
 });
 
-if(!dropped){
-resetPosition(current);
-}
+preview.remove();
+preview = null;
 
-current.classList.remove("dragging");
-current = null;
-
-document.removeEventListener("pointermove", drag);
+document.removeEventListener("pointermove", movePreview);
 document.removeEventListener("pointerup", endDrag);
-}
 
-function resetPosition(item){
-item.style.position="relative";
-item.style.left="0";
-item.style.top="0";
-document.querySelector(".draggables").appendChild(item);
-}
+if(!targetZone) return;
 
-function checkMatch(zone, item){
+/* VALIDAZIONE */
+if(targetZone.dataset.person === draggedItem.dataset.match){
 
-if(zone.dataset.person === item.dataset.match){
-zone.classList.add("correct");
-item.style.pointerEvents="none";
-}else{
-zone.classList.add("wrong");
-setTimeout(()=>{
-zone.classList.remove("wrong");
-resetPosition(item);
-},700);
-}
+targetZone.appendChild(draggedItem);
+draggedItem.style.pointerEvents="none";
+targetZone.classList.add("correct");
 
 checkWin();
+
+}else{
+
+targetZone.classList.add("wrong");
+
+setTimeout(()=>{
+targetZone.classList.remove("wrong");
+},700);
+
+}
+
+draggedItem = null;
 }
 
 function checkWin(){
@@ -239,9 +229,6 @@ window.location.href="stanza6.html";
 }
 
 </script>
-
-</body>
-</html>
 
 </body>
 </html>
