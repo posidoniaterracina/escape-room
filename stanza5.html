@@ -62,6 +62,7 @@ flex-wrap:wrap;
 justify-content:center;
 gap:15px;
 margin:30px;
+min-height:60px;
 }
 
 .draggable{
@@ -120,7 +121,7 @@ max-width:280px;
 
 </div>
 
-<div class="draggables">
+<div class="draggables" id="draggables">
 
 <div class="draggable" data-match="mozart">
 "La musica non è nelle note, ma nel silenzio tra di esse."
@@ -152,6 +153,9 @@ item.addEventListener("pointerdown", startDrag);
 function startDrag(e){
 
 draggedItem = e.currentTarget;
+
+/* FORZA SEMPRE RIENTRO NEL CONTENITORE ORIGINALE */
+document.getElementById("draggables").appendChild(draggedItem);
 
 preview = draggedItem.cloneNode(true);
 preview.classList.add("drag-preview");
@@ -195,9 +199,11 @@ preview = null;
 document.removeEventListener("pointermove", movePreview);
 document.removeEventListener("pointerup", endDrag);
 
-if(!targetZone) return;
+if(!targetZone){
+draggedItem = null;
+return;
+}
 
-/* VALIDAZIONE */
 if(targetZone.dataset.person === draggedItem.dataset.match){
 
 targetZone.appendChild(draggedItem);
