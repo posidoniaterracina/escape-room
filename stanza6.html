@@ -7,98 +7,127 @@
 
 <style>
 html, body{
+height:100%;
 margin:0;
 overflow-x:hidden;
+}
+
+body{
 font-family:Arial;
-background:linear-gradient(135deg,#1e3c72,#2a5298);
 color:white;
 text-align:center;
+
+background:url("./sfondo_legge.jpg") no-repeat center center fixed;
+background-size:cover;
+
+position:relative;
+}
+
+/* Overlay scuro */
+body::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.65);
+z-index:0;
+}
+
+.main{
+position:relative;
+z-index:1;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:flex-start;
+padding:20px 10px;
+box-sizing:border-box;
 }
 
 h1{
-margin-top:25px;
+margin-top:10px;
+font-size:28px;
 }
 
 p{
-opacity:.9;
-margin-bottom:20px;
+max-width:720px;
+opacity:.92;
+margin-top:8px;
+margin-bottom:18px;
 }
 
-/* CONTENITORE SLOT */
-.container{
-max-width:600px;
-margin:20px auto;
+/* QUIZ BOX */
+.quiz-box{
+width:92%;
+max-width:680px;
+background:rgba(255,255,255,0.12);
+border:1px solid rgba(255,255,255,0.25);
+border-radius:18px;
+padding:18px;
+backdrop-filter:blur(6px);
+box-shadow:0 10px 30px rgba(0,0,0,0.35);
+}
+
+/* DOMANDA */
+.question{
+font-size:18px;
+font-weight:bold;
+margin-bottom:14px;
+line-height:1.35;
+}
+
+/* RISPOSTE */
+.answers{
 display:flex;
 flex-direction:column;
-gap:15px;
-padding:0 15px;
+gap:10px;
 }
 
-.slot{
-background:rgba(255,255,255,0.1);
-border:2px dashed rgba(255,255,255,0.5);
+.answer{
+border:none;
 border-radius:14px;
-padding:18px;
-min-height:65px;
-display:flex;
-align-items:center;
-justify-content:center;
+padding:14px;
+font-size:15px;
 font-weight:bold;
-transition:.3s;
-}
-
-.slot.correct{
-background:#28a745;
-border-color:#fff;
-animation:pop .3s ease;
-}
-
-.slot.wrong{
-background:#dc3545;
-animation:shake .4s;
-}
-
-/* DRAGGABLES */
-.draggables{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:12px;
-margin:30px 15px;
-}
-
-.draggable{
-padding:12px 18px;
-border-radius:25px;
-cursor:grab;
-font-weight:bold;
+cursor:pointer;
 color:white;
-user-select:none;
-touch-action:none;
+text-align:left;
 transition:.2s;
+background:rgba(255,255,255,0.15);
+border:1px solid rgba(255,255,255,0.25);
 }
 
-.draggable:active{
-transform:scale(1.08);
+.answer:hover{
+transform:scale(1.01);
+background:rgba(255,255,255,0.25);
 }
 
-.costituzione{background:#ff9800;}
-.legge{background:#4caf50;}
-.regolamento{background:#2196f3;}
-.consuetudine{background:#9c27b0;}
+.answer.correct{
+background:rgba(40,167,69,0.9);
+animation:pop .25s ease;
+}
 
-.drag-preview{
-position:fixed;
-z-index:9999;
-pointer-events:none;
-opacity:.95;
-padding:12px 18px;
-border-radius:25px;
+.answer.wrong{
+background:rgba(220,53,69,0.9);
+animation:shake .35s;
+}
+
+.feedback{
+margin-top:12px;
 font-weight:bold;
-color:white;
+min-height:26px;
 }
 
-/* ANIMAZIONI */
+.progress{
+margin-top:12px;
+font-size:14px;
+opacity:.85;
+}
+
+/* Animazioni */
 @keyframes shake{
 0%{transform:translateX(0);}
 25%{transform:translateX(-6px);}
@@ -112,150 +141,141 @@ color:white;
 100%{transform:scale(1);}
 }
 
-@keyframes glow{
-0%{box-shadow:0 0 5px white;}
-50%{box-shadow:0 0 20px white;}
-100%{box-shadow:0 0 5px white;}
-}
-
-.win{
-animation:glow 1s infinite;
-}
-
-/* MOBILE */
+/* Mobile */
 @media (max-width:768px){
 h1{font-size:22px;}
-.slot{padding:14px;min-height:55px;}
-.draggable{padding:10px 14px;font-size:14px;}
+.question{font-size:16px;}
+.answer{font-size:14px;padding:12px;}
+.quiz-box{padding:14px;}
 }
 </style>
 </head>
 
 <body>
 
-<h1>📜 Stanza 6</h1>
-<p>Metti in ordine gerarchico le fonti normative (dalla più importante alla meno importante)</p>
+<div class="main">
 
-<div class="container">
-<div class="slot" data-rank="1">1️⃣ Livello più alto</div>
-<div class="slot" data-rank="2">2️⃣</div>
-<div class="slot" data-rank="3">3️⃣</div>
-<div class="slot" data-rank="4">4️⃣ Livello più basso</div>
+<h1>⚖️ Stanza 6</h1>
+<p>Rispondi correttamente a tutte le domande sulle fonti del diritto per proseguire.</p>
+
+<div class="quiz-box">
+
+<div class="question" id="question"></div>
+<div class="answers" id="answers"></div>
+<div class="feedback" id="feedback"></div>
+<div class="progress" id="progress"></div>
+
 </div>
-
-<div class="draggables" id="draggables">
-
-<!-- ORDINE MESCOLATO -->
-<div class="draggable regolamento" data-rank="3">📑 Regolamento</div>
-<div class="draggable costituzione" data-rank="1">👑 Costituzione</div>
-<div class="draggable consuetudine" data-rank="4">🔁 Consuetudine</div>
-<div class="draggable legge" data-rank="2">📘 Legge ordinaria</div>
-
 </div>
 
 <script>
-let draggedItem=null;
-let preview=null;
-let offsetX=0;
-let offsetY=0;
+const questions = [
+{
+q: "Qual è la fonte normativa più importante nell’ordinamento italiano?",
+options: [
+"📘 Legge ordinaria",
+"📑 Regolamento",
+"📜 Costituzione",
+"🔁 Consuetudine (prassi)"
+],
+correctIndex: 2
+},
+{
+q: "Qual è la fonte con valore gerarchico più basso?",
+options: [
+"📜 Costituzione",
+"📘 Legge ordinaria",
+"🔁 Consuetudine (prassi)",
+"📑 Regolamento"
+],
+correctIndex: 2
+},
+{
+q: "Se una legge ordinaria è in contrasto con la Costituzione:",
+options: [
+"Può essere dichiarata incostituzionale",
+"La Costituzione perde valore",
+"Vale la legge più recente",
+"Decide il Sindaco"
+],
+correctIndex: 0
+},
+{
+q: "I regolamenti sono emanati principalmente da:",
+options: [
+"La Corte Costituzionale",
+"Il Governo / Pubblica Amministrazione",
+"I cittadini",
+"I Tribunali ordinari"
+],
+correctIndex: 1
+}
+];
 
-document.querySelectorAll(".draggable").forEach(item=>{
-item.addEventListener("pointerdown",startDrag);
-});
+let current=0;
+let locked=false;
 
-function startDrag(e){
-e.preventDefault();
-draggedItem=e.currentTarget;
+const questionEl=document.getElementById("question");
+const answersEl=document.getElementById("answers");
+const feedbackEl=document.getElementById("feedback");
+const progressEl=document.getElementById("progress");
 
-const rect=draggedItem.getBoundingClientRect();
-offsetX=e.clientX-rect.left;
-offsetY=e.clientY-rect.top;
+shuffle(questions);
+renderQuestion();
 
-preview=draggedItem.cloneNode(true);
-preview.classList.add("drag-preview");
-preview.style.background=getComputedStyle(draggedItem).backgroundColor;
-document.body.appendChild(preview);
-
-movePreview(e);
-
-draggedItem.setPointerCapture(e.pointerId);
-
-document.addEventListener("pointermove",movePreview);
-document.addEventListener("pointerup",endDrag);
+function shuffle(array){
+for(let i=array.length-1;i>0;i--){
+const j=Math.floor(Math.random()*(i+1));
+[array[i],array[j]]=[array[j],array[i]];
+}
 }
 
-function movePreview(e){
-if(!preview)return;
-preview.style.left=(e.clientX-offsetX)+"px";
-preview.style.top=(e.clientY-offsetY)+"px";
-}
+function renderQuestion(){
 
-function endDrag(e){
+locked=false;
+feedbackEl.textContent="";
 
-if(!preview)return;
+const q=questions[current];
+questionEl.textContent=q.q;
+progressEl.textContent=`Domanda ${current+1} di ${questions.length}`;
+answersEl.innerHTML="";
 
-let target=null;
+const indexed=q.options.map((text,idx)=>({text,idx}));
+shuffle(indexed);
 
-document.querySelectorAll(".slot").forEach(slot=>{
-const rect=slot.getBoundingClientRect();
-if(
-e.clientX>rect.left &&
-e.clientX<rect.right &&
-e.clientY>rect.top &&
-e.clientY<rect.bottom
-){
-target=slot;
-}
-});
+indexed.forEach(obj=>{
+const btn=document.createElement("button");
+btn.className="answer";
+btn.textContent=obj.text;
 
-preview.remove();
-preview=null;
+btn.addEventListener("click",()=>{
+if(locked)return;
+locked=true;
 
-document.removeEventListener("pointermove",movePreview);
-document.removeEventListener("pointerup",endDrag);
-
-if(!target){draggedItem=null;return;}
-
-if(target.classList.contains("correct")){
-draggedItem=null;
-return;
-}
-
-if(target.dataset.rank===draggedItem.dataset.rank){
-
-target.innerHTML=draggedItem.innerHTML;
-target.classList.add("correct");
-draggedItem.style.display="none";
-
-checkWin();
-
-}else{
-
-target.classList.add("wrong");
-setTimeout(()=>{target.classList.remove("wrong");},600);
-
-}
-
-draggedItem=null;
-}
-
-function checkWin(){
-let correct=document.querySelectorAll(".slot.correct").length;
-
-if(correct===4){
-
-document.querySelectorAll(".slot").forEach(s=>{
-s.classList.add("win");
-});
-
+if(obj.idx===q.correctIndex){
+btn.classList.add("correct");
+feedbackEl.textContent="✅ Corretto!";
 setTimeout(()=>{
+current++;
+if(current>=questions.length){
 window.location.href="stanza7.html";
-},900);
-
+}else{
+renderQuestion();
 }
+},650);
+}else{
+btn.classList.add("wrong");
+feedbackEl.textContent="❌ Sbagliato! Riprova.";
+setTimeout(()=>{
+renderQuestion();
+},700);
+}
+});
+
+answersEl.appendChild(btn);
+});
 }
 </script>
 
 </body>
 </html>
-
