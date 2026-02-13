@@ -16,7 +16,6 @@ html,body{
   align-items:center;
   color:#fff;
   user-select:none;
-  -webkit-user-select:none;
 }
 
 .header{
@@ -24,13 +23,13 @@ html,body{
   text-align:center;
 }
 
-/* TAVOLO */
+/* TAVOLO 8x8 */
 .table{
-  width:min(820px,96vw);
+  width:min(860px,96vw);
   aspect-ratio:1;
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  grid-template-rows:repeat(4,1fr);
+  grid-template-columns:repeat(8,1fr);
+  grid-template-rows:repeat(8,1fr);
   position:relative;
   border-radius:18px;
   overflow:hidden;
@@ -42,15 +41,14 @@ html,body{
 }
 
 .cell{
-  border:1px solid rgba(0,0,0,.07);
+  border:1px solid rgba(0,0,0,.05);
   position:relative;
 }
 
-/* OGGETTI */
 .on-table{
   position:absolute;
   pointer-events:none;
-  z-index:5;
+  z-index:10;
 }
 
 .on-table img{
@@ -58,7 +56,6 @@ html,body{
   height:auto;
   display:block;
   user-select:none;
-  -webkit-user-drag:none;
 }
 
 /* TOOLBOX */
@@ -68,7 +65,7 @@ html,body{
   flex-wrap:wrap;
   justify-content:center;
   gap:12px;
-  width:min(820px,96vw);
+  width:min(860px,96vw);
 }
 
 .draggable{
@@ -86,8 +83,6 @@ html,body{
   max-width:80%;
   max-height:80%;
   pointer-events:none;
-  user-select:none;
-  -webkit-user-drag:none;
 }
 
 .drag-preview{
@@ -97,12 +92,7 @@ html,body{
   height:64px;
   pointer-events:none;
 }
-
-.drag-preview img{
-  width:100%;
-  user-select:none;
-  -webkit-user-drag:none;
-}
+.drag-preview img{ width:100%; }
 </style>
 </head>
 
@@ -137,13 +127,13 @@ const table=document.getElementById("table");
 let dragged=null, preview=null;
 let placed=[];
 
-/* CREA GRIGLIA 4x4 */
-const cols=["A","B","C","D"];
-for(let r=1;r<=4;r++){
-  for(let c=0;c<4;c++){
+/* CREA 8x8 */
+for(let r=0;r<8;r++){
+  for(let c=0;c<8;c++){
     const cell=document.createElement("div");
     cell.className="cell";
-    cell.dataset.pos=cols[c]+r;
+    cell.dataset.r=r;
+    cell.dataset.c=c;
     table.appendChild(cell);
   }
 }
@@ -185,47 +175,47 @@ function drop(e){
   const cell=getCell(e.clientX,e.clientY);
   if(!cell) return;
 
-  const pos=cell.dataset.pos;
+  const r=parseInt(cell.dataset.r);
+  const c=parseInt(cell.dataset.c);
   const item=dragged.dataset.item;
 
-  /* CENTRO */
-  if(["B2","B3","C2","C3"].includes(pos)){
+  /* CENTRO PIATTI (area 3-4-5-6) */
+  if(r>=3 && r<=5 && c>=3 && c<=5){
     if(item==="plate-dinner" && !placed.includes("plate-dinner")){
-      placeCenter("plate-dinner",260);
+      placeCenter(item,320,60);
     }
     else if(item==="plate-soup" && placed.includes("plate-dinner")){
-      placeCenter("plate-soup",200);
+      placeCenter(item,230,60);
     }
     else if(item==="napkin" && placed.includes("plate-soup")){
-      placeCenter("napkin",170);
+      placeCenter(item,190,60);
     }
     else return;
   }
 
-  /* FORCHETTE */
-  else if(pos==="A2" && item==="fork-second") placeCell(item,cell);
-  else if(pos==="A3" && item==="fork-main") placeCell(item,cell);
+  /* FORCHETTE (affiancate) */
+  else if(r>=3 && r<=5 && c===1 && item==="fork-second") placeCell(item,cell);
+  else if(r>=3 && r<=5 && c===2 && item==="fork-main") placeCell(item,cell);
 
   /* DESTRA */
-  else if(pos==="D2" && item==="knife") placeCell(item,cell);
-  else if(pos==="D3" && item==="spoon") placeCell(item,cell);
+  else if(r>=3 && r<=5 && c===6 && item==="knife") placeCell(item,cell);
+  else if(r>=3 && r<=5 && c===7 && item==="spoon") placeCell(item,cell);
 
-  /* DESSERT */
-  else if(["B1","C1"].includes(pos) && item==="spoon-dessert"){
+  /* DESSERT sopra */
+  else if(r===1 && c>=3 && c<=5 && item==="spoon-dessert"){
     placeDessert();
   }
 
-  /* BICCHIERI */
-  else if(pos==="C1" && item==="glass-water") placeCell(item,cell);
-  else if(pos==="D1" && item==="glass-wine") placeCell(item,cell);
+  /* BICCHIERI vicini */
+  else if(r===1 && c===5 && item==="glass-water") placeCell(item,cell);
+  else if(r===1 && c===6 && item==="glass-wine") placeCell(item,cell);
+
   else return;
 
   dragged.remove();
   placed.push(item);
   checkWin();
 }
-
-/* POSIZIONAMENTI */
 
 function placeCell(item,cell){
   const div=document.createElement("div");
@@ -246,7 +236,7 @@ function placeCell(item,cell){
   table.appendChild(div);
 }
 
-function placeCenter(item,size){
+function placeCenter(item,size,down){
   const div=document.createElement("div");
   div.className="on-table";
   div.style.width=size+"px";
@@ -256,7 +246,7 @@ function placeCenter(item,size){
   div.appendChild(img);
 
   div.style.left="50%";
-  div.style.top="50%";
+  div.style.top="calc(50% + "+down+"px)";
   div.style.transform="translate(-50%,-50%)";
 
   table.appendChild(div);
@@ -265,14 +255,14 @@ function placeCenter(item,size){
 function placeDessert(){
   const div=document.createElement("div");
   div.className="on-table";
-  div.style.width="160px";
+  div.style.width="180px";
 
   const img=document.createElement("img");
   img.src="spoon-dessert.png";
   div.appendChild(img);
 
   div.style.left="50%";
-  div.style.top="12.5%";
+  div.style.top="18%";
   div.style.transform="translate(-50%,-50%) rotate(90deg)";
 
   table.appendChild(div);
