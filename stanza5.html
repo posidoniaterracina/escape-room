@@ -72,6 +72,8 @@ padding:12px 16px;
 border-radius:10px;
 cursor:grab;
 max-width:280px;
+touch-action:none; /* IMPORTANTISSIMO per mobile */
+user-select:none;
 }
 
 .drag-preview{
@@ -142,98 +144,111 @@ max-width:280px;
 </div>
 
 <script>
-
 let draggedItem = null;
 let preview = null;
 
+let grabOffsetX = 0;
+let grabOffsetY = 0;
+
 document.querySelectorAll(".draggable").forEach(item=>{
-item.addEventListener("pointerdown", startDrag);
+  item.addEventListener("pointerdown", startDrag);
 });
 
 function startDrag(e){
 
-draggedItem = e.currentTarget;
+  // blocca lo scroll mobile durante il drag
+  e.preventDefault();
 
-/* FORZA SEMPRE RIENTRO NEL CONTENITORE ORIGINALE */
-document.getElementById("draggables").appendChild(draggedItem);
+  draggedItem = e.currentTarget;
 
-preview = draggedItem.cloneNode(true);
-preview.classList.add("drag-preview");
-document.body.appendChild(preview);
+  // calcolo offset reale tra dito e elemento
+  const rect = draggedItem.getBoundingClientRect();
+  grabOffsetX = e.clientX - rect.left;
+  grabOffsetY = e.clientY - rect.top;
 
-movePreview(e);
+  // FORZA SEMPRE RIENTRO NEL CONTENITORE ORIGINALE
+  document.getElementById("draggables").appendChild(draggedItem);
 
-document.addEventListener("pointermove", movePreview);
-document.addEventListener("pointerup", endDrag);
+  preview = draggedItem.cloneNode(true);
+  preview.classList.add("drag-preview");
+  document.body.appendChild(preview);
+
+  // posizionamento iniziale corretto
+  movePreview(e);
+
+  // cattura il puntatore: evita salti se il dito esce dall'elemento
+  draggedItem.setPointerCapture(e.pointerId);
+
+  document.addEventListener("pointermove", movePreview);
+  document.addEventListener("pointerup", endDrag);
 }
 
 function movePreview(e){
-if(!preview) return;
+  if(!preview) return;
 
-preview.style.left = (e.clientX - preview.offsetWidth/2) + "px";
-preview.style.top  = (e.clientY - preview.offsetHeight/2) + "px";
+  preview.style.left = (e.clientX - grabOffsetX) + "px";
+  preview.style.top  = (e.clientY - grabOffsetY) + "px";
 }
 
 function endDrag(e){
 
-if(!preview) return;
+  if(!preview) return;
 
-let targetZone = null;
+  let targetZone = null;
 
-document.querySelectorAll(".dropzone").forEach(zone=>{
-const rect = zone.getBoundingClientRect();
+  document.querySelectorAll(".dropzone").forEach(zone=>{
+    const rect = zone.getBoundingClientRect();
 
-if(
-e.clientX > rect.left &&
-e.clientX < rect.right &&
-e.clientY > rect.top &&
-e.clientY < rect.bottom
-){
-targetZone = zone;
-}
-});
+    if(
+      e.clientX > rect.left &&
+      e.clientX < rect.right &&
+      e.clientY > rect.top &&
+      e.clientY < rect.bottom
+    ){
+      targetZone = zone;
+    }
+  });
 
-preview.remove();
-preview = null;
+  preview.remove();
+  preview = null;
 
-document.removeEventListener("pointermove", movePreview);
-document.removeEventListener("pointerup", endDrag);
+  document.removeEventListener("pointermove", movePreview);
+  document.removeEventListener("pointerup", endDrag);
 
-if(!targetZone){
-draggedItem = null;
-return;
-}
+  if(!targetZone){
+    draggedItem = null;
+    return;
+  }
 
-if(targetZone.dataset.person === draggedItem.dataset.match){
+  if(targetZone.dataset.person === draggedItem.dataset.match){
 
-targetZone.appendChild(draggedItem);
-draggedItem.style.pointerEvents="none";
-targetZone.classList.add("correct");
+    targetZone.appendChild(draggedItem);
+    draggedItem.style.pointerEvents="none";
+    targetZone.classList.add("correct");
 
-checkWin();
+    checkWin();
 
-}else{
+  }else{
 
-targetZone.classList.add("wrong");
+    targetZone.classList.add("wrong");
 
-setTimeout(()=>{
-targetZone.classList.remove("wrong");
-},700);
+    setTimeout(()=>{
+      targetZone.classList.remove("wrong");
+    },700);
 
-}
+  }
 
-draggedItem = null;
+  draggedItem = null;
 }
 
 function checkWin(){
-let correct = document.querySelectorAll(".dropzone.correct").length;
-if(correct === 4){
-setTimeout(()=>{
-window.location.href="stanza6.html";
-},800);
+  let correct = document.querySelectorAll(".dropzone.correct").length;
+  if(correct === 4){
+    setTimeout(()=>{
+      window.location.href="stanza6.html";
+    },800);
+  }
 }
-}
-
 </script>
 
 </body>
