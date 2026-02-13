@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stanza 7</title>
+
+<style>
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#00416a,#799f0c);
+margin:0;
+padding:0;
+text-align:center;
+color:white;
+}
+
+h1{margin-top:25px;}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+width:90%;
+max-width:800px;
+margin:30px auto;
+}
+
+.dropzone{
+background:rgba(255,255,255,0.15);
+border:3px dashed rgba(255,255,255,0.6);
+border-radius:12px;
+padding:20px;
+min-height:150px;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+transition:.3s;
+font-weight:bold;
+}
+
+.dropzone.correct{
+border-color:#28a745;
+background:rgba(40,167,69,0.3);
+}
+
+.dropzone.wrong{
+border-color:#dc3545;
+background:rgba(220,53,69,0.3);
+}
+
+.flag{
+font-size:50px;
+margin-bottom:10px;
+}
+
+.draggables{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+margin:30px;
+}
+
+.draggable{
+background:#1a73e8;
+padding:12px 18px;
+border-radius:10px;
+cursor:grab;
+max-width:280px;
+user-select:none;
+touch-action:none;
+font-weight:bold;
+}
+
+.drag-preview{
+position:fixed;
+z-index:9999;
+pointer-events:none;
+opacity:.95;
+background:#1a73e8;
+padding:12px 18px;
+border-radius:10px;
+font-weight:bold;
+}
+
+@media (max-width:768px){
+.grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+
+<body>
+
+<h1>✈️ Stanza 7</h1>
+<p>Associa ogni Paese al documento minimo necessario per viaggiare.</p>
+
+<div class="grid">
+
+<div class="dropzone" data-match="schengen">
+<div class="flag">🇪🇺</div>
+Area Schengen
+</div>
+
+<div class="dropzone" data-match="uk">
+<div class="flag">🇬🇧</div>
+Regno Unito
+</div>
+
+<div class="dropzone" data-match="usa">
+<div class="flag">🇺🇸</div>
+Stati Uniti
+</div>
+
+<div class="dropzone" data-match="cina">
+<div class="flag">🇨🇳</div>
+Cina
+</div>
+
+</div>
+
+<div class="draggables" id="draggables">
+
+<div class="draggable" data-doc="usa">
+Passaporto + ESTA
+</div>
+
+<div class="draggable" data-doc="schengen">
+Carta d’identità valida per l’espatrio
+</div>
+
+<div class="draggable" data-doc="cina">
+Passaporto + Visto
+</div>
+
+<div class="draggable" data-doc="uk">
+Passaporto
+</div>
+
+</div>
+
+<script>
+let draggedItem=null;
+let preview=null;
+let offsetX=0;
+let offsetY=0;
+
+document.querySelectorAll(".draggable").forEach(item=>{
+item.addEventListener("pointerdown",startDrag);
+});
+
+function startDrag(e){
+e.preventDefault();
+draggedItem=e.currentTarget;
+
+const rect=draggedItem.getBoundingClientRect();
+offsetX=e.clientX-rect.left;
+offsetY=e.clientY-rect.top;
+
+preview=draggedItem.cloneNode(true);
+preview.classList.add("drag-preview");
+document.body.appendChild(preview);
+
+movePreview(e);
+
+draggedItem.setPointerCapture(e.pointerId);
+
+document.addEventListener("pointermove",movePreview);
+document.addEventListener("pointerup",endDrag);
+}
+
+function movePreview(e){
+if(!preview)return;
+preview.style.left=(e.clientX-offsetX)+"px";
+preview.style.top=(e.clientY-offsetY)+"px";
+}
+
+function endDrag(e){
+
+if(!preview)return;
+
+let target=null;
+
+document.querySelectorAll(".dropzone").forEach(zone=>{
+const rect=zone.getBoundingClientRect();
+if(
+e.clientX>rect.left &&
+e.clientX<rect.right &&
+e.clientY>rect.top &&
+e.clientY<rect.bottom
+){
+target=zone;
+}
+});
+
+preview.remove();
+preview=null;
+
+document.removeEventListener("pointermove",movePreview);
+document.removeEventListener("pointerup",endDrag);
+
+if(!target){draggedItem=null;return;}
+
+if(target.classList.contains("correct")){
+draggedItem=null;
+return;
+}
+
+if(target.dataset.match===draggedItem.dataset.doc){
+
+target.appendChild(draggedItem);
+draggedItem.style.pointerEvents="none";
+target.classList.add("correct");
+
+checkWin();
+
+}else{
+
+target.classList.add("wrong");
+setTimeout(()=>{target.classList.remove("wrong");},600);
+
+}
+
+draggedItem=null;
+}
+
+function checkWin(){
+let correct=document.querySelectorAll(".dropzone.correct").length;
+if(correct===4){
+setTimeout(()=>{
+window.location.href="stanza8.html";
+},900);
+}
+}
+</script>
+
+</body>
+</html>
