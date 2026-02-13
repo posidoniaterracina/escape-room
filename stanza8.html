@@ -10,24 +10,20 @@ html,body{
   margin:0;
   height:100%;
   font-family:Arial;
-  overflow:hidden;
-}
-
-body{
   background:#111;
   display:flex;
   flex-direction:column;
   align-items:center;
   color:#fff;
+  overflow:hidden;
 }
 
-/* Header */
 .header{
   padding:20px 0 10px;
   text-align:center;
 }
 
-/* Tavolo */
+/* TAVOLO */
 .table{
   width:min(820px,96vw);
   aspect-ratio:4/3;
@@ -35,75 +31,85 @@ body{
   border-radius:24px;
   overflow:hidden;
   box-shadow:0 25px 60px rgba(0,0,0,.6);
-}
 
-/* Tovaglia ristorante bianca a quadri */
-.table{
   background:
-    repeating-linear-gradient(
-      0deg,
-      #ffffff,
-      #ffffff 40px,
-      #f3f3f3 40px,
-      #f3f3f3 80px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      #ffffff,
-      #ffffff 40px,
-      #f3f3f3 40px,
-      #f3f3f3 80px
-    );
+    repeating-linear-gradient(0deg,#ffffff,#ffffff 40px,#f2f2f2 40px,#f2f2f2 80px),
+    repeating-linear-gradient(90deg,#ffffff,#ffffff 40px,#f2f2f2 40px,#f2f2f2 80px);
 }
 
-/* TARGET AMPLIATI */
+/* TARGET AMPI */
 .target{
   position:absolute;
   border-radius:50%;
   width:260px;
   height:260px;
+  z-index:1;
 }
 
-/* Centro unico */
+/* CENTRO */
 #t-center{
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
 }
 
-/* Forchette */
-#t-fork-main{ top:50%; left:30%; transform:translate(-50%,-50%); width:180px; height:260px;}
-#t-fork-second{ top:50%; left:18%; transform:translate(-50%,-50%); width:180px; height:260px;}
-
-/* Destra */
-#t-knife{ top:50%; left:70%; transform:translate(-50%,-50%); width:180px; height:260px;}
-#t-spoon{ top:50%; left:83%; transform:translate(-50%,-50%); width:180px; height:260px;}
-
-/* Bicchieri */
-#t-water{ top:25%; left:75%; transform:translate(-50%,-50%); width:180px; height:180px;}
-#t-wine{ top:22%; left:88%; transform:translate(-50%,-50%); width:180px; height:180px;}
-
-/* Dessert */
-#t-dessert{
-  top:20%;
-  left:50%;
+/* SINISTRA */
+#t-fork-main{
+  top:50%; left:30%;
   transform:translate(-50%,-50%);
-  width:260px;
-  height:120px;
+  width:200px; height:260px;
+}
+#t-fork-second{
+  top:50%; left:18%;
+  transform:translate(-50%,-50%);
+  width:200px; height:260px;
 }
 
-/* Oggetti */
+/* DESTRA */
+#t-knife{
+  top:50%; left:70%;
+  transform:translate(-50%,-50%);
+  width:200px; height:260px;
+}
+#t-spoon{
+  top:50%; left:83%;
+  transform:translate(-50%,-50%);
+  width:200px; height:260px;
+}
+
+/* BICCHIERI */
+#t-water{
+  top:25%; left:75%;
+  transform:translate(-50%,-50%);
+  width:180px; height:180px;
+}
+#t-wine{
+  top:22%; left:88%;
+  transform:translate(-50%,-50%);
+  width:180px; height:180px;
+}
+
+/* DESSERT */
+#t-dessert{
+  top:20%; left:50%;
+  transform:translate(-50%,-50%);
+  width:260px; height:120px;
+}
+
+/* OGGETTI */
 .on-table{
   position:absolute;
   pointer-events:none;
+  z-index:10;
 }
 
 .on-table img{
   width:100%;
   height:auto;
+  display:block;
 }
 
-/* Toolbox */
+/* TOOLBOX */
 .toolbox{
   margin-top:20px;
   display:flex;
@@ -186,9 +192,10 @@ body{
 </div>
 
 <script>
-let dragged=null,preview=null;
+let dragged=null, preview=null;
 const table=document.getElementById("table");
-let placedOrder=[];
+let placed=[];
+const SNAP_DISTANCE=160;
 
 document.querySelectorAll(".draggable").forEach(el=>{
   el.addEventListener("pointerdown",startDrag);
@@ -209,55 +216,52 @@ function move(e){
   preview.style.top=(e.clientY-32)+"px";
 }
 
-function near(x,y,el){
-  const r=el.getBoundingClientRect();
-  const cx=r.left+r.width/2;
-  const cy=r.top+r.height/2;
-  return Math.hypot(x-cx,y-cy)<150;
+function nearestTarget(x,y){
+  let best=null, bestDist=9999;
+  document.querySelectorAll(".target").forEach(t=>{
+    const r=t.getBoundingClientRect();
+    const cx=r.left+r.width/2;
+    const cy=r.top+r.height/2;
+    const dist=Math.hypot(x-cx,y-cy);
+    if(dist<SNAP_DISTANCE && dist<bestDist){
+      best=t;
+      bestDist=dist;
+    }
+  });
+  return best;
 }
 
 function drop(e){
   document.removeEventListener("pointermove",move);
   document.removeEventListener("pointerup",drop);
 
-  const x=e.clientX,y=e.clientY;
-  let target=null;
-
-  document.querySelectorAll(".target").forEach(t=>{
-    if(near(x,y,t)) target=t;
-  });
-
+  const target=nearestTarget(e.clientX,e.clientY);
   preview.remove();
   if(!target) return;
 
   const item=dragged.dataset.item;
 
-  /* Centro logico */
+  /* CENTRO LOGICO */
   if(target.id==="t-center"){
-    if(item==="plate-dinner" && !placedOrder.includes("plate-dinner")){
+    if(item==="plate-dinner" && !placed.includes("plate-dinner")){
       place(item,target,240);
-      placedOrder.push(item);
     }
-    else if(item==="plate-soup" && placedOrder.includes("plate-dinner")){
+    else if(item==="plate-soup" && placed.includes("plate-dinner")){
       place(item,target,190);
-      placedOrder.push(item);
     }
-    else if(item==="napkin" && placedOrder.includes("plate-soup")){
+    else if(item==="napkin" && placed.includes("plate-soup")){
       place(item,target,170);
-      placedOrder.push(item);
     }
+    else return;
   }
-
-  /* Altri target */
   else{
     const id=target.id.replace("t-","");
-    if(item===id){
-      place(item,target,120);
-      placedOrder.push(item);
-    }
+    if(item!==id) return;
+    place(item,target,120);
   }
 
   dragged.remove();
+  placed.push(item);
   checkWin();
 }
 
@@ -281,7 +285,7 @@ function place(item,target,size){
 }
 
 function checkWin(){
-  if(placedOrder.length===10){
+  if(placed.length===10){
     setTimeout(()=>{window.location.href="stanza9.html";},800);
   }
 }
