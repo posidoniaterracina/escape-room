@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stanza 8 - Mise en place</title>
 
 <style>
@@ -21,27 +21,13 @@ body{
   align-items:center;
 }
 
-/* Header */
 .header{
   width:100%;
   max-width:980px;
   padding:14px 12px 6px 12px;
-  box-sizing:border-box;
   text-align:center;
 }
 
-.header h1{
-  margin:0;
-  font-size:22px;
-}
-
-.header p{
-  margin:6px 0 0 0;
-  opacity:.9;
-  font-size:13px;
-}
-
-/* Layout */
 .wrap{
   width:100%;
   max-width:980px;
@@ -50,107 +36,77 @@ body{
   align-items:center;
   gap:12px;
   padding:6px 10px 14px 10px;
-  box-sizing:border-box;
 }
 
-/* Tavolo */
 .table{
-  width:min(820px, 96vw);
-  aspect-ratio: 4 / 3;
+  width:min(820px,96vw);
+  aspect-ratio:4/3;
   position:relative;
   border-radius:22px;
   background:linear-gradient(135deg,#7a4a26,#3b2412);
-  box-shadow:0 18px 45px rgba(0,0,0,0.55);
-  border:2px solid rgba(255,255,255,0.08);
-  overflow:hidden;
+  box-shadow:0 18px 45px rgba(0,0,0,.55);
+  border:2px solid rgba(255,255,255,.08);
 }
 
-/* Tovaglia / area posto */
-.placemat{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:76%;
-  height:70%;
-  border-radius:18px;
-  background:rgba(255,255,255,0.08);
-  border:2px dashed rgba(255,255,255,0.18);
-}
-
-/* Drop targets: invisibili (debug attivabile) */
+/* Target zone */
 .target{
   position:absolute;
-  width:72px;
-  height:72px;
-  border-radius:16px;
-  /* invisibile */
-  outline:0;
-  background:transparent;
+  border-radius:20px;
+  width:110px;
+  height:110px;
 }
 
-/* Se vuoi debug: aggiungi class="debug" al body */
-body.debug .target{
-  outline:2px dashed rgba(255,255,255,0.35);
-  background:rgba(255,255,255,0.06);
+/* Centro */
+#t-dinner { top:50%; left:50%; transform:translate(-50%,-50%); }
+#t-soup   { top:50%; left:50%; transform:translate(-50%,-50%); }
+#t-napkin { top:50%; left:50%; transform:translate(-50%,-50%); }
+
+/* Sinistra (dentro → fuori) */
+#t-fork-main   { top:50%; left:30%; transform:translate(-50%,-50%); }
+#t-fork-second { top:50%; left:18%; transform:translate(-50%,-50%); }
+
+/* Destra */
+#t-knife  { top:50%; left:70%; transform:translate(-50%,-50%); }
+#t-spoon  { top:50%; left:83%; transform:translate(-50%,-50%); }
+
+/* Bicchieri */
+#t-water  { top:25%; left:75%; transform:translate(-50%,-50%); }
+#t-wine   { top:22%; left:88%; transform:translate(-50%,-50%); }
+
+/* Dessert sopra orizzontale */
+#t-dessert{
+  top:20%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:140px;
+  height:60px;
 }
 
-/* Feedback */
-.target.wrong{
-  outline:2px solid rgba(220,53,69,0.9);
-  background:rgba(220,53,69,0.15);
-}
-.target.correct{
-  outline:2px solid rgba(40,167,69,0.95);
-  background:rgba(40,167,69,0.12);
-}
-
-/* Posizioni (mise en place base) */
-#t-plate  { top:50%; left:50%; transform:translate(-50%,-50%); width:120px; height:120px; border-radius:999px; }
-#t-fork   { top:50%; left:22%; transform:translate(-50%,-50%); }
-#t-knife  { top:50%; left:78%; transform:translate(-50%,-50%); }
-#t-spoon  { top:50%; left:90%; transform:translate(-50%,-50%); }
-
-/* Bicchieri in alto a destra: acqua (più interno) + vino (più esterno) */
-#t-water  { top:24%; left:78%; transform:translate(-50%,-50%); }
-#t-wine   { top:22%; left:90%; transform:translate(-50%,-50%); }
-
-/* Tovagliolo: in alto a sinistra (puoi cambiarlo sul piatto se preferisci) */
-#t-napkin { top:24%; left:22%; transform:translate(-50%,-50%); }
-
-/* Oggetti ancorati sul tavolo */
+/* Oggetti sul tavolo */
 .on-table{
   position:absolute;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  user-select:none;
-  pointer-events:none; /* una volta piazzati non si spostano */
-  font-size:44px;
-  filter:drop-shadow(0 8px 12px rgba(0,0,0,0.45));
+  pointer-events:none;
 }
 
-/* “Piatto” più grande */
-.on-table.plate{
-  font-size:72px;
+.on-table img{
+  width:100%;
+  height:auto;
+  display:block;
 }
 
 /* Toolbox */
 .toolbox{
-  width:min(820px, 96vw);
-  background:rgba(0,0,0,0.25);
-  border:1px solid rgba(255,255,255,0.14);
+  width:min(820px,96vw);
+  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.14);
   border-radius:18px;
   padding:12px;
-  box-sizing:border-box;
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
   gap:12px;
-  backdrop-filter:blur(6px);
 }
 
-/* Draggable: SOLO OGGETTO */
 .draggable{
   width:64px;
   height:64px;
@@ -158,206 +114,163 @@ body.debug .target{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:38px;
   cursor:grab;
-  user-select:none;
-  touch-action:none;
-  background:rgba(255,255,255,0.10);
-  border:1px solid rgba(255,255,255,0.18);
-  box-shadow:0 10px 22px rgba(0,0,0,0.35);
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.18);
 }
 
-.draggable:active{
-  transform:scale(1.06);
+.draggable img{
+  max-width:80%;
+  max-height:80%;
+  pointer-events:none;
 }
 
 .drag-preview{
   position:fixed;
   z-index:9999;
-  pointer-events:none;
   width:64px;
   height:64px;
-  border-radius:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:38px;
-  background:rgba(255,255,255,0.14);
-  border:1px solid rgba(255,255,255,0.22);
-  box-shadow:0 10px 22px rgba(0,0,0,0.35);
-  backdrop-filter:blur(6px);
+  pointer-events:none;
 }
 
-/* Mobile: riduci un filo */
-@media (max-width:768px){
-  html, body{ overflow:hidden; }
-  .draggable, .drag-preview{ width:56px; height:56px; font-size:34px; border-radius:14px; }
-  .on-table{ font-size:40px; }
-  .on-table.plate{ font-size:64px; }
-
-  .target{ width:62px; height:62px; border-radius:14px; }
-  #t-plate{ width:110px; height:110px; }
-}
+.drag-preview img{ width:100%; }
 </style>
 </head>
 
 <body>
-  <div class="header">
-    <h1>🍽️ Stanza 8</h1>
-    <p>Completa la mise en place: trascina gli oggetti sul tavolo (vista dall’alto).</p>
+
+<div class="header">
+  <h1>🍽️ Stanza 8</h1>
+  <p>Completa la mise en place corretta.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="table" id="table">
+    <div class="target" id="t-dinner" data-target="plate-dinner"></div>
+    <div class="target" id="t-soup" data-target="plate-soup"></div>
+    <div class="target" id="t-napkin" data-target="napkin"></div>
+
+    <div class="target" id="t-fork-main" data-target="fork-main"></div>
+    <div class="target" id="t-fork-second" data-target="fork-second"></div>
+
+    <div class="target" id="t-knife" data-target="knife"></div>
+    <div class="target" id="t-spoon" data-target="spoon"></div>
+
+    <div class="target" id="t-water" data-target="glass-water"></div>
+    <div class="target" id="t-wine" data-target="glass-wine"></div>
+
+    <div class="target" id="t-dessert" data-target="spoon-dessert"></div>
   </div>
 
-  <div class="wrap">
+  <div class="toolbox">
+    <div class="draggable" data-item="plate-dinner"><img src="plate-dinner.png"></div>
+    <div class="draggable" data-item="plate-soup"><img src="plate-soup.png"></div>
+    <div class="draggable" data-item="napkin"><img src="napkin.png"></div>
 
-    <div class="table" id="table">
-      <div class="placemat"></div>
+    <div class="draggable" data-item="fork-main"><img src="fork.png"></div>
+    <div class="draggable" data-item="fork-second"><img src="fork.png"></div>
 
-      <!-- TARGET INVISIBILI -->
-      <div class="target" id="t-plate"  data-target="plate"></div>
-      <div class="target" id="t-fork"   data-target="fork"></div>
-      <div class="target" id="t-knife"  data-target="knife"></div>
-      <div class="target" id="t-spoon"  data-target="spoon"></div>
-      <div class="target" id="t-water"  data-target="water"></div>
-      <div class="target" id="t-wine"   data-target="wine"></div>
-      <div class="target" id="t-napkin" data-target="napkin"></div>
-    </div>
+    <div class="draggable" data-item="knife"><img src="knife.png"></div>
+    <div class="draggable" data-item="spoon"><img src="spoon.png"></div>
 
-    <!-- TOOLBOX: SOLO OGGETTI -->
-    <div class="toolbox" id="toolbox">
-      <!-- ordine non-soluzione -->
-      <div class="draggable" data-item="wine"   aria-label="Bicchiere vino">🍷</div>
-      <div class="draggable" data-item="fork"   aria-label="Forchetta">🍴</div>
-      <div class="draggable" data-item="napkin" aria-label="Tovagliolo">🧻</div>
-      <div class="draggable" data-item="spoon"  aria-label="Cucchiaio">🥄</div>
-      <div class="draggable" data-item="plate"  aria-label="Piatto">🍽️</div>
-      <div class="draggable" data-item="knife"  aria-label="Coltello">🔪</div>
-      <div class="draggable" data-item="water"  aria-label="Bicchiere acqua">🥛</div>
-    </div>
-
+    <div class="draggable" data-item="glass-water"><img src="glass-water.png"></div>
+    <div class="draggable" data-item="glass-wine"><img src="glass-wine.png"></div>
+    <div class="draggable" data-item="spoon-dessert"><img src="spoon-dessert.png"></div>
   </div>
+
+</div>
 
 <script>
-let draggedItem = null;
-let preview = null;
-let grabOffsetX = 0;
-let grabOffsetY = 0;
-
-const table = document.getElementById("table");
-const targets = Array.from(document.querySelectorAll(".target"));
+let dragged=null, preview=null;
+const table=document.getElementById("table");
+const targets=[...document.querySelectorAll(".target")];
+let placed={};
 
 document.querySelectorAll(".draggable").forEach(el=>{
-  el.addEventListener("pointerdown", startDrag);
+  el.addEventListener("pointerdown",startDrag);
 });
 
 function startDrag(e){
-  e.preventDefault();
-  draggedItem = e.currentTarget;
-
-  const rect = draggedItem.getBoundingClientRect();
-  grabOffsetX = e.clientX - rect.left;
-  grabOffsetY = e.clientY - rect.top;
-
-  preview = draggedItem.cloneNode(true);
+  dragged=e.currentTarget;
+  preview=dragged.cloneNode(true);
   preview.classList.add("drag-preview");
   document.body.appendChild(preview);
-
-  movePreview(e);
-
-  draggedItem.setPointerCapture(e.pointerId);
-  document.addEventListener("pointermove", movePreview);
-  document.addEventListener("pointerup", endDrag);
+  move(e);
+  document.addEventListener("pointermove",move);
+  document.addEventListener("pointerup",drop);
 }
 
-function movePreview(e){
-  if(!preview) return;
-  preview.style.left = (e.clientX - grabOffsetX) + "px";
-  preview.style.top  = (e.clientY - grabOffsetY) + "px";
+function move(e){
+  if(!preview)return;
+  preview.style.left=(e.clientX-32)+"px";
+  preview.style.top=(e.clientY-32)+"px";
 }
 
-function endDrag(e){
-  if(!preview) return;
+function drop(e){
+  document.removeEventListener("pointermove",move);
+  document.removeEventListener("pointerup",drop);
 
-  const itemType = draggedItem.dataset.item;
-  let hit = null;
-
+  let hit=null;
   targets.forEach(t=>{
-    const r = t.getBoundingClientRect();
-    if(e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom){
-      hit = t;
+    const r=t.getBoundingClientRect();
+    if(e.clientX>r.left && e.clientX<r.right && e.clientY>r.top && e.clientY<r.bottom){
+      hit=t;
     }
   });
 
   preview.remove();
-  preview = null;
+  preview=null;
+  if(!hit)return;
 
-  document.removeEventListener("pointermove", movePreview);
-  document.removeEventListener("pointerup", endDrag);
+  const item=dragged.dataset.item;
+  if(hit.dataset.target!==item)return;
 
-  if(!hit){
-    draggedItem = null;
-    return;
-  }
+  /* Sequenze obbligatorie */
+  if(item==="plate-soup" && !placed["plate-dinner"])return;
+  if(item==="napkin" && !placed["plate-soup"])return;
 
-  if(hit.classList.contains("correct")){
-    // target già occupato
-    flashWrong(hit);
-    draggedItem = null;
-    return;
-  }
+  if(placed[item])return;
 
-  if(hit.dataset.target === itemType){
-    placeOnTable(itemType, hit);
-    draggedItem.remove(); // sparisce dalla toolbox
-    hit.classList.add("correct");
-    checkWin();
+  place(item,hit);
+  dragged.remove();
+  placed[item]=true;
+
+  checkWin();
+}
+
+function place(item,target){
+  const div=document.createElement("div");
+  div.className="on-table";
+  const img=document.createElement("img");
+
+  if(item==="fork-main" || item==="fork-second"){
+    img.src="fork.png";
   }else{
-    flashWrong(hit);
+    img.src=item+".png";
   }
 
-  draggedItem = null;
-}
+  if(item==="plate-dinner") div.style.width="220px";
+  else if(item==="plate-soup") div.style.width="180px";
+  else if(item==="napkin") div.style.width="160px";
+  else if(item==="spoon-dessert") div.style.width="140px";
+  else div.style.width="120px";
 
-function flashWrong(target){
-  target.classList.add("wrong");
-  setTimeout(()=>target.classList.remove("wrong"), 450);
-}
+  div.appendChild(img);
 
-function placeOnTable(itemType, target){
-  const obj = document.createElement("div");
-  obj.className = "on-table " + (itemType === "plate" ? "plate" : "");
-  obj.textContent = emojiFor(itemType);
+  const tRect=target.getBoundingClientRect();
+  const tableRect=table.getBoundingClientRect();
 
-  // posiziona l’oggetto centrato sul target (dentro la table)
-  const tableRect = table.getBoundingClientRect();
-  const tRect = target.getBoundingClientRect();
+  div.style.left=(tRect.left-tableRect.left+tRect.width/2)+"px";
+  div.style.top=(tRect.top-tableRect.top+tRect.height/2)+"px";
+  div.style.transform="translate(-50%,-50%)";
 
-  const centerX = (tRect.left + tRect.right)/2 - tableRect.left;
-  const centerY = (tRect.top + tRect.bottom)/2 - tableRect.top;
-
-  obj.style.left = centerX + "px";
-  obj.style.top  = centerY + "px";
-  obj.style.transform = "translate(-50%, -50%)";
-
-  table.appendChild(obj);
-}
-
-function emojiFor(itemType){
-  switch(itemType){
-    case "plate": return "🍽️";
-    case "fork": return "🍴";
-    case "knife": return "🔪";
-    case "spoon": return "🥄";
-    case "water": return "🥛";
-    case "wine": return "🍷";
-    case "napkin": return "🧻";
-    default: return "❓";
-  }
+  table.appendChild(div);
 }
 
 function checkWin(){
-  const done = document.querySelectorAll(".target.correct").length;
-  if(done === targets.length){
-    setTimeout(()=>{ window.location.href = "stanza9.html"; }, 700);
+  if(Object.keys(placed).length===10){
+    setTimeout(()=>{window.location.href="stanza9.html";},800);
   }
 }
 </script>
