@@ -16,6 +16,7 @@ html,body{
   align-items:center;
   color:#fff;
   user-select:none;
+  touch-action:none;
 }
 
 .header{
@@ -45,7 +46,7 @@ html,body{
   position:relative;
 }
 
-/* AREE DI RILASCIO EVIDENZIATE */
+/* AREE VISIVE */
 .drop-zone{
   position:absolute;
   border:2px dashed rgba(0,0,0,.25);
@@ -65,6 +66,8 @@ html,body{
   width:100%;
   height:auto;
   display:block;
+  user-select:none;
+  -webkit-user-drag:none;
 }
 
 /* TOOLBOX */
@@ -85,12 +88,15 @@ html,body{
   align-items:center;
   justify-content:center;
   cursor:grab;
+  touch-action:none;
 }
 
 .draggable img{
   max-width:100%;
   max-height:100%;
   pointer-events:none;
+  user-select:none;
+  -webkit-user-drag:none;
 }
 
 .drag-preview{
@@ -135,7 +141,7 @@ const table=document.getElementById("table");
 let dragged=null, preview=null;
 let placed=[];
 
-/* CREA 8x8 */
+/* CREA GRIGLIA 8x8 */
 for(let r=0;r<8;r++){
   for(let c=0;c<8;c++){
     const cell=document.createElement("div");
@@ -184,10 +190,14 @@ document.querySelectorAll(".draggable").forEach(el=>{
 function startDrag(e){
   e.preventDefault();
   dragged=e.currentTarget;
+  dragged.setPointerCapture(e.pointerId);
+
   preview=dragged.cloneNode(true);
   preview.classList.add("drag-preview");
   document.body.appendChild(preview);
+
   move(e);
+
   document.addEventListener("pointermove",move);
   document.addEventListener("pointerup",drop);
 }
@@ -207,6 +217,7 @@ function getCell(x,y){
 function drop(e){
   document.removeEventListener("pointermove",move);
   document.removeEventListener("pointerup",drop);
+
   preview.remove();
 
   const cell=getCell(e.clientX,e.clientY);
