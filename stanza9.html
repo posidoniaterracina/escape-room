@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stanza 9 - Stato Patrimoniale</title>
+
+<style>
+html,body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#111;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  user-select:none;
+}
+
+.header{
+  padding:20px 0;
+  text-align:center;
+}
+
+.wrapper{
+  width:min(1100px,95vw);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.section{
+  background:#1c1c1c;
+  border-radius:14px;
+  padding:15px;
+}
+
+.section h3{
+  text-align:center;
+  margin-top:0;
+}
+
+.block{
+  background:#2b2b2b;
+  border:2px dashed rgba(255,255,255,.25);
+  border-radius:10px;
+  min-height:90px;
+  margin:12px 0;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s;
+}
+
+.block.correct{
+  border-color:#4caf50;
+  background:#1f3a25;
+}
+
+.block.wrong{
+  border-color:#f44336;
+}
+
+.toolbox{
+  margin-top:25px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:15px;
+  justify-content:center;
+}
+
+.draggable{
+  background:#fff;
+  color:#000;
+  padding:10px 15px;
+  border-radius:8px;
+  cursor:grab;
+  font-weight:bold;
+  touch-action:none;
+}
+
+.drag-preview{
+  position:fixed;
+  z-index:9999;
+  pointer-events:none;
+  background:#fff;
+  color:#000;
+  padding:10px 15px;
+  border-radius:8px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h2>Stanza 9</h2>
+  <p>Completa lo Stato Patrimoniale a sezioni contrapposte</p>
+</div>
+
+<div class="wrapper">
+
+  <div class="section">
+    <h3>ATTIVO</h3>
+
+    <div class="block" data-target="impianti">
+      Immobilizzazioni
+    </div>
+
+    <div class="block" data-target="merci">
+      Attivo circolante
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>PASSIVO</h3>
+
+    <div class="block" data-target="mutui">
+      Debiti
+    </div>
+
+    <div class="block" data-target="tfr">
+      Fondi
+    </div>
+
+    <div class="block" data-target="utile">
+      Capitale Netto
+    </div>
+  </div>
+
+</div>
+
+<div class="toolbox">
+  <div class="draggable" data-item="impianti">Impianti</div>
+  <div class="draggable" data-item="merci">Merci</div>
+  <div class="draggable" data-item="mutui">Mutui passivi</div>
+  <div class="draggable" data-item="tfr">Fondo TFR</div>
+  <div class="draggable" data-item="utile">Utile</div>
+</div>
+
+<script>
+let dragged=null;
+let preview=null;
+let correctCount=0;
+
+document.querySelectorAll(".draggable").forEach(el=>{
+  el.addEventListener("pointerdown",startDrag);
+});
+
+function startDrag(e){
+  e.preventDefault();
+  dragged=e.currentTarget;
+  dragged.setPointerCapture(e.pointerId);
+
+  preview=dragged.cloneNode(true);
+  preview.classList.add("drag-preview");
+  document.body.appendChild(preview);
+
+  move(e);
+
+  document.addEventListener("pointermove",move);
+  document.addEventListener("pointerup",drop);
+}
+
+function move(e){
+  preview.style.left=(e.clientX+5)+"px";
+  preview.style.top=(e.clientY+5)+"px";
+}
+
+function drop(e){
+  document.removeEventListener("pointermove",move);
+  document.removeEventListener("pointerup",drop);
+  preview.remove();
+
+  let hit=null;
+
+  document.querySelectorAll(".block").forEach(block=>{
+    const r=block.getBoundingClientRect();
+    if(e.clientX>r.left && e.clientX<r.right &&
+       e.clientY>r.top && e.clientY<r.bottom){
+        hit=block;
+    }
+  });
+
+  if(!hit) return;
+
+  if(hit.dataset.target===dragged.dataset.item){
+    hit.classList.add("correct");
+    hit.textContent=dragged.textContent;
+    dragged.remove();
+    correctCount++;
+  }else{
+    hit.classList.add("wrong");
+    setTimeout(()=>hit.classList.remove("wrong"),400);
+  }
+
+  if(correctCount===5){
+    setTimeout(()=>window.location.href="stanza10.html",800);
+  }
+}
+</script>
+
+</body>
+</html>
