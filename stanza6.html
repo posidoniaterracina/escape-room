@@ -3,140 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stanza 7</title>
+<title>Stanza 6</title>
 
 <style>
 html, body{
-height:100%;
 margin:0;
 overflow-x:hidden;
-}
-
-body{
 font-family:Arial;
+background:linear-gradient(135deg,#1e3c72,#2a5298);
 color:white;
 text-align:center;
-
-background-image:url("sfondo_legge.jpg");
-background-size:cover;
-background-position:center;
-background-attachment:fixed;
-
-position:relative;
-}
-
-/* overlay scuro per leggibilità */
-body::before{
-content:"";
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.65);
-z-index:0;
-}
-
-.main{
-position:relative;
-z-index:1;
-min-height:100vh;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:flex-start;
-padding:20px 10px;
-box-sizing:border-box;
 }
 
 h1{
-margin-top:10px;
-font-size:28px;
+margin-top:25px;
 }
 
 p{
-max-width:720px;
-opacity:.92;
-margin-top:8px;
-margin-bottom:18px;
+opacity:.9;
+margin-bottom:20px;
 }
 
-/* BOX QUIZ */
-.quiz-box{
-width:92%;
-max-width:680px;
-background:rgba(255,255,255,0.12);
-border:1px solid rgba(255,255,255,0.25);
-border-radius:18px;
-padding:18px;
-backdrop-filter:blur(6px);
-box-shadow:0 10px 30px rgba(0,0,0,0.35);
-}
-
-/* DOMANDA */
-.question{
-font-size:18px;
-font-weight:bold;
-margin-bottom:14px;
-line-height:1.35;
-}
-
-/* RISPOSTE */
-.answers{
+/* CONTENITORE SLOT */
+.container{
+max-width:600px;
+margin:20px auto;
 display:flex;
 flex-direction:column;
-gap:10px;
+gap:15px;
+padding:0 15px;
 }
 
-.answer{
-border:none;
+.slot{
+background:rgba(255,255,255,0.1);
+border:2px dashed rgba(255,255,255,0.5);
 border-radius:14px;
-padding:14px 14px;
-font-size:15px;
+padding:18px;
+min-height:65px;
+display:flex;
+align-items:center;
+justify-content:center;
 font-weight:bold;
-cursor:pointer;
+transition:.3s;
+}
+
+.slot.correct{
+background:#28a745;
+border-color:#fff;
+animation:pop .3s ease;
+}
+
+.slot.wrong{
+background:#dc3545;
+animation:shake .4s;
+}
+
+/* DRAGGABLES */
+.draggables{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:12px;
+margin:30px 15px;
+}
+
+.draggable{
+padding:12px 18px;
+border-radius:25px;
+cursor:grab;
+font-weight:bold;
 color:white;
-text-align:left;
+user-select:none;
+touch-action:none;
 transition:.2s;
-background:rgba(255,255,255,0.14);
-border:1px solid rgba(255,255,255,0.18);
 }
 
-.answer:hover{
-transform:scale(1.01);
-background:rgba(255,255,255,0.20);
+.draggable:active{
+transform:scale(1.08);
 }
 
-.answer:active{
-transform:scale(0.99);
-}
+.costituzione{background:#ff9800;}
+.legge{background:#4caf50;}
+.regolamento{background:#2196f3;}
+.consuetudine{background:#9c27b0;}
 
-/* STATI */
-.answer.correct{
-background:rgba(40,167,69,0.85);
-border-color:rgba(255,255,255,0.35);
-animation:pop .25s ease;
-}
-
-.answer.wrong{
-background:rgba(220,53,69,0.85);
-border-color:rgba(255,255,255,0.35);
-animation:shake .35s;
-}
-
-/* FEEDBACK */
-.feedback{
-margin-top:14px;
-font-weight:bold;
-min-height:26px;
+.drag-preview{
+position:fixed;
+z-index:9999;
+pointer-events:none;
 opacity:.95;
-}
-
-/* PROGRESS */
-.progress{
-margin-top:14px;
-font-size:14px;
-opacity:.85;
+padding:12px 18px;
+border-radius:25px;
+font-weight:bold;
+color:white;
 }
 
 /* ANIMAZIONI */
@@ -153,174 +112,150 @@ opacity:.85;
 100%{transform:scale(1);}
 }
 
+@keyframes glow{
+0%{box-shadow:0 0 5px white;}
+50%{box-shadow:0 0 20px white;}
+100%{box-shadow:0 0 5px white;}
+}
+
+.win{
+animation:glow 1s infinite;
+}
+
 /* MOBILE */
 @media (max-width:768px){
-
-h1{
-font-size:22px;
-}
-
-.question{
-font-size:16px;
-}
-
-.answer{
-font-size:14px;
-padding:12px 12px;
-}
-
-.quiz-box{
-padding:14px;
-}
+h1{font-size:22px;}
+.slot{padding:14px;min-height:55px;}
+.draggable{padding:10px 14px;font-size:14px;}
 }
 </style>
 </head>
 
 <body>
 
-<div class="main">
+<h1>📜 Stanza 6</h1>
+<p>Metti in ordine gerarchico le fonti normative (dalla più importante alla meno importante)</p>
 
-<h1>⚖️ Stanza 7</h1>
-<p>Rispondi correttamente a tutte le domande per sbloccare la stanza successiva. Attenzione: una risposta sbagliata ti fa riprovare la domanda!</p>
-
-<div class="quiz-box">
-
-<div class="question" id="question"></div>
-
-<div class="answers" id="answers"></div>
-
-<div class="feedback" id="feedback"></div>
-
-<div class="progress" id="progress"></div>
-
+<div class="container">
+<div class="slot" data-rank="1">1️⃣ Livello più alto</div>
+<div class="slot" data-rank="2">2️⃣</div>
+<div class="slot" data-rank="3">3️⃣</div>
+<div class="slot" data-rank="4">4️⃣ Livello più basso</div>
 </div>
+
+<div class="draggables" id="draggables">
+
+<!-- ORDINE MESCOLATO -->
+<div class="draggable regolamento" data-rank="3">📑 Regolamento</div>
+<div class="draggable costituzione" data-rank="1">👑 Costituzione</div>
+<div class="draggable consuetudine" data-rank="4">🔁 Consuetudine</div>
+<div class="draggable legge" data-rank="2">📘 Legge ordinaria</div>
 
 </div>
 
 <script>
-const questions = [
-  {
-    q: "📌 Qual è la fonte normativa più importante nell’ordinamento italiano?",
-    options: [
-      "📘 Legge ordinaria",
-      "👑 Costituzione",
-      "📑 Regolamento",
-      "🔁 Consuetudine (prassi)"
-    ],
-    correctIndex: 1
-  },
-  {
-    q: "📌 Tra queste, quale ha valore più basso nella gerarchia delle fonti?",
-    options: [
-      "📘 Legge ordinaria",
-      "📑 Regolamento",
-      "🔁 Consuetudine (prassi)",
-      "👑 Costituzione"
-    ],
-    correctIndex: 2
-  },
-  {
-    q: "📌 Se una legge ordinaria è in contrasto con la Costituzione, cosa succede?",
-    options: [
-      "✅ Può essere dichiarata incostituzionale",
-      "📌 La Costituzione perde valore",
-      "📌 La legge resta valida perché è più recente",
-      "📌 Decide il Comune"
-    ],
-    correctIndex: 0
-  },
-  {
-    q: "📌 I regolamenti sono emanati principalmente da:",
-    options: [
-      "🏛️ Il Governo / la Pubblica Amministrazione",
-      "👥 Il popolo tramite referendum",
-      "⚖️ La Corte Costituzionale",
-      "📰 I giornali"
-    ],
-    correctIndex: 0
-  }
-];
+let draggedItem=null;
+let preview=null;
+let offsetX=0;
+let offsetY=0;
 
-let current = 0;
-let locked = false;
+document.querySelectorAll(".draggable").forEach(item=>{
+item.addEventListener("pointerdown",startDrag);
+});
 
-const questionEl = document.getElementById("question");
-const answersEl  = document.getElementById("answers");
-const feedbackEl = document.getElementById("feedback");
-const progressEl = document.getElementById("progress");
+function startDrag(e){
+e.preventDefault();
+draggedItem=e.currentTarget;
 
-shuffleQuestions();
-renderQuestion();
+const rect=draggedItem.getBoundingClientRect();
+offsetX=e.clientX-rect.left;
+offsetY=e.clientY-rect.top;
 
-function shuffleQuestions(){
-  for(let i = questions.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [questions[i], questions[j]] = [questions[j], questions[i]];
-  }
+preview=draggedItem.cloneNode(true);
+preview.classList.add("drag-preview");
+preview.style.background=getComputedStyle(draggedItem).backgroundColor;
+document.body.appendChild(preview);
+
+movePreview(e);
+
+draggedItem.setPointerCapture(e.pointerId);
+
+document.addEventListener("pointermove",movePreview);
+document.addEventListener("pointerup",endDrag);
 }
 
-function renderQuestion(){
-
-  locked = false;
-  feedbackEl.textContent = "";
-
-  const q = questions[current];
-
-  questionEl.textContent = q.q;
-  progressEl.textContent = `Domanda ${current + 1} di ${questions.length}`;
-
-  answersEl.innerHTML = "";
-
-  // shuffle opzioni ma mantenendo indice corretto
-  const indexed = q.options.map((text, idx)=>({text, idx}));
-  for(let i = indexed.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
-  }
-
-  indexed.forEach(obj=>{
-    const btn = document.createElement("button");
-    btn.className = "answer";
-    btn.textContent = obj.text;
-
-    btn.addEventListener("click", ()=>{
-      if(locked) return;
-      locked = true;
-
-      const isCorrect = (obj.idx === q.correctIndex);
-
-      if(isCorrect){
-        btn.classList.add("correct");
-        feedbackEl.textContent = "✅ Corretto! Avanti...";
-        setTimeout(()=>{
-          current++;
-          if(current >= questions.length){
-            winRoom();
-          }else{
-            renderQuestion();
-          }
-        }, 650);
-
-      }else{
-        btn.classList.add("wrong");
-        feedbackEl.textContent = "❌ Sbagliato! Riprova la stessa domanda.";
-        setTimeout(()=>{
-          renderQuestion();
-        }, 700);
-      }
-    });
-
-    answersEl.appendChild(btn);
-  });
+function movePreview(e){
+if(!preview)return;
+preview.style.left=(e.clientX-offsetX)+"px";
+preview.style.top=(e.clientY-offsetY)+"px";
 }
 
-function winRoom(){
-  feedbackEl.textContent = "🎉 Perfetto! Stanza sbloccata...";
-  setTimeout(()=>{
-    window.location.href = "stanza8.html";
-  }, 900);
+function endDrag(e){
+
+if(!preview)return;
+
+let target=null;
+
+document.querySelectorAll(".slot").forEach(slot=>{
+const rect=slot.getBoundingClientRect();
+if(
+e.clientX>rect.left &&
+e.clientX<rect.right &&
+e.clientY>rect.top &&
+e.clientY<rect.bottom
+){
+target=slot;
+}
+});
+
+preview.remove();
+preview=null;
+
+document.removeEventListener("pointermove",movePreview);
+document.removeEventListener("pointerup",endDrag);
+
+if(!target){draggedItem=null;return;}
+
+if(target.classList.contains("correct")){
+draggedItem=null;
+return;
+}
+
+if(target.dataset.rank===draggedItem.dataset.rank){
+
+target.innerHTML=draggedItem.innerHTML;
+target.classList.add("correct");
+draggedItem.style.display="none";
+
+checkWin();
+
+}else{
+
+target.classList.add("wrong");
+setTimeout(()=>{target.classList.remove("wrong");},600);
+
+}
+
+draggedItem=null;
+}
+
+function checkWin(){
+let correct=document.querySelectorAll(".slot.correct").length;
+
+if(correct===4){
+
+document.querySelectorAll(".slot").forEach(s=>{
+s.classList.add("win");
+});
+
+setTimeout(()=>{
+window.location.href="stanza7.html";
+},900);
+
+}
 }
 </script>
 
 </body>
 </html>
+
