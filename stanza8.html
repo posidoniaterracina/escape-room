@@ -1,383 +1,363 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stanza 8</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stanza 8 - Mise en place</title>
 
 <style>
 html, body{
-margin:0;
-height:100%;
-font-family:Arial;
-overflow-x:hidden;
+  margin:0;
+  height:100%;
+  font-family:Arial;
+  overflow:hidden;
 }
 
 body{
-background:linear-gradient(135deg,#1b1b1b,#3a2c1d);
-color:white;
-text-align:center;
+  background:linear-gradient(135deg,#121212,#2b1f14);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
 }
 
 /* Header */
-h1{
-margin:18px 10px 6px 10px;
-font-size:26px;
+.header{
+  width:100%;
+  max-width:980px;
+  padding:14px 12px 6px 12px;
+  box-sizing:border-box;
+  text-align:center;
 }
 
-p{
-margin:0 12px 16px 12px;
-opacity:.92;
+.header h1{
+  margin:0;
+  font-size:22px;
+}
+
+.header p{
+  margin:6px 0 0 0;
+  opacity:.9;
+  font-size:13px;
+}
+
+/* Layout */
+.wrap{
+  width:100%;
+  max-width:980px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  padding:6px 10px 14px 10px;
+  box-sizing:border-box;
 }
 
 /* Tavolo */
-.table-area{
-width:95%;
-max-width:900px;
-margin:0 auto 18px auto;
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:14px;
-}
-
-/* Tavolo grafico */
 .table{
-width:100%;
-max-width:720px;
-aspect-ratio: 4 / 3;
-background:linear-gradient(135deg,#6b3f1f,#3b2412);
-border-radius:22px;
-box-shadow:0 18px 45px rgba(0,0,0,0.55);
-position:relative;
-border:2px solid rgba(255,255,255,0.08);
+  width:min(820px, 96vw);
+  aspect-ratio: 4 / 3;
+  position:relative;
+  border-radius:22px;
+  background:linear-gradient(135deg,#7a4a26,#3b2412);
+  box-shadow:0 18px 45px rgba(0,0,0,0.55);
+  border:2px solid rgba(255,255,255,0.08);
+  overflow:hidden;
 }
 
-/* Postazione */
-.place{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:78%;
-height:70%;
-border-radius:18px;
-background:rgba(255,255,255,0.06);
-border:2px dashed rgba(255,255,255,0.25);
+/* Tovaglia / area posto */
+.placemat{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:76%;
+  height:70%;
+  border-radius:18px;
+  background:rgba(255,255,255,0.08);
+  border:2px dashed rgba(255,255,255,0.18);
 }
 
-/* Dropzone */
-.dropzone{
-position:absolute;
-width:74px;
-height:74px;
-border-radius:16px;
-display:flex;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-gap:4px;
-background:rgba(255,255,255,0.10);
-border:2px dashed rgba(255,255,255,0.45);
-transition:.25s;
-box-sizing:border-box;
+/* Drop targets: invisibili (debug attivabile) */
+.target{
+  position:absolute;
+  width:72px;
+  height:72px;
+  border-radius:16px;
+  /* invisibile */
+  outline:0;
+  background:transparent;
 }
 
-.dropzone.correct{
-border-color:#28a745;
-background:rgba(40,167,69,0.25);
+/* Se vuoi debug: aggiungi class="debug" al body */
+body.debug .target{
+  outline:2px dashed rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.06);
 }
 
-.dropzone.wrong{
-border-color:#dc3545;
-background:rgba(220,53,69,0.22);
+/* Feedback */
+.target.wrong{
+  outline:2px solid rgba(220,53,69,0.9);
+  background:rgba(220,53,69,0.15);
+}
+.target.correct{
+  outline:2px solid rgba(40,167,69,0.95);
+  background:rgba(40,167,69,0.12);
 }
 
-.zone-label{
-font-size:10.5px;
-opacity:.85;
-font-weight:bold;
+/* Posizioni (mise en place base) */
+#t-plate  { top:50%; left:50%; transform:translate(-50%,-50%); width:120px; height:120px; border-radius:999px; }
+#t-fork   { top:50%; left:22%; transform:translate(-50%,-50%); }
+#t-knife  { top:50%; left:78%; transform:translate(-50%,-50%); }
+#t-spoon  { top:50%; left:90%; transform:translate(-50%,-50%); }
+
+/* Bicchieri in alto a destra: acqua (più interno) + vino (più esterno) */
+#t-water  { top:24%; left:78%; transform:translate(-50%,-50%); }
+#t-wine   { top:22%; left:90%; transform:translate(-50%,-50%); }
+
+/* Tovagliolo: in alto a sinistra (puoi cambiarlo sul piatto se preferisci) */
+#t-napkin { top:24%; left:22%; transform:translate(-50%,-50%); }
+
+/* Oggetti ancorati sul tavolo */
+.on-table{
+  position:absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  user-select:none;
+  pointer-events:none; /* una volta piazzati non si spostano */
+  font-size:44px;
+  filter:drop-shadow(0 8px 12px rgba(0,0,0,0.45));
 }
 
-/* Posizioni tavola */
-#zone-plate{ top:50%; left:50%; transform:translate(-50%,-50%); }
-#zone-fork{ top:50%; left:18%; transform:translate(-50%,-50%); }
-#zone-knife{ top:50%; left:82%; transform:translate(-50%,-50%); }
-#zone-spoon{ top:50%; left:94%; transform:translate(-50%,-50%); }
-
-/* Bicchieri: acqua + vino (in alto a destra) */
-#zone-water{ top:22%; left:82%; transform:translate(-50%,-50%); }
-#zone-wine{ top:22%; left:92%; transform:translate(-50%,-50%); }
-
-#zone-napkin{ top:22%; left:22%; transform:translate(-50%,-50%); }
-
-/* Draggables */
-.draggables{
-width:95%;
-max-width:900px;
-margin:0 auto 24px auto;
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:12px;
-padding:0 10px;
-box-sizing:border-box;
+/* “Piatto” più grande */
+.on-table.plate{
+  font-size:72px;
 }
 
+/* Toolbox */
+.toolbox{
+  width:min(820px, 96vw);
+  background:rgba(0,0,0,0.25);
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:18px;
+  padding:12px;
+  box-sizing:border-box;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+  backdrop-filter:blur(6px);
+}
+
+/* Draggable: SOLO OGGETTO */
 .draggable{
-background:#1a73e8;
-border:1px solid rgba(255,255,255,0.25);
-padding:12px 14px;
-border-radius:14px;
-cursor:grab;
-user-select:none;
-touch-action:none;
-font-weight:bold;
-font-size:14px;
-display:flex;
-align-items:center;
-gap:10px;
-min-width:170px;
-justify-content:center;
-box-shadow:0 10px 22px rgba(0,0,0,0.35);
+  width:64px;
+  height:64px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:38px;
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+  background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.18);
+  box-shadow:0 10px 22px rgba(0,0,0,0.35);
 }
 
-.emo{
-font-size:22px;
+.draggable:active{
+  transform:scale(1.06);
 }
 
 .drag-preview{
-position:fixed;
-z-index:9999;
-pointer-events:none;
-opacity:.95;
-background:#1a73e8;
-border:1px solid rgba(255,255,255,0.25);
-padding:12px 14px;
-border-radius:14px;
-font-weight:bold;
-font-size:14px;
-display:flex;
-align-items:center;
-gap:10px;
-min-width:170px;
-justify-content:center;
-box-shadow:0 10px 22px rgba(0,0,0,0.35);
+  position:fixed;
+  z-index:9999;
+  pointer-events:none;
+  width:64px;
+  height:64px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:38px;
+  background:rgba(255,255,255,0.14);
+  border:1px solid rgba(255,255,255,0.22);
+  box-shadow:0 10px 22px rgba(0,0,0,0.35);
+  backdrop-filter:blur(6px);
 }
 
-/* Mobile: tutto visibile, zone più piccole */
+/* Mobile: riduci un filo */
 @media (max-width:768px){
+  html, body{ overflow:hidden; }
+  .draggable, .drag-preview{ width:56px; height:56px; font-size:34px; border-radius:14px; }
+  .on-table{ font-size:40px; }
+  .on-table.plate{ font-size:64px; }
 
-h1{font-size:20px;}
-
-.table{
-max-width:560px;
-}
-
-.dropzone{
-width:58px;
-height:58px;
-border-radius:14px;
-}
-
-.zone-label{
-font-size:9px;
-}
-
-.draggable{
-min-width:140px;
-font-size:12.5px;
-padding:10px 10px;
-border-radius:12px;
-}
-
-.drag-preview{
-min-width:140px;
-font-size:12.5px;
-padding:10px 10px;
-border-radius:12px;
-}
-
-.emo{font-size:20px;}
+  .target{ width:62px; height:62px; border-radius:14px; }
+  #t-plate{ width:110px; height:110px; }
 }
 </style>
 </head>
 
 <body>
+  <div class="header">
+    <h1>🍽️ Stanza 8</h1>
+    <p>Completa la mise en place: trascina gli oggetti sul tavolo (vista dall’alto).</p>
+  </div>
 
-<h1>🍽️ Stanza 8</h1>
-<p>Trascina ogni elemento nella posizione corretta della mise en place.</p>
+  <div class="wrap">
 
-<div class="table-area">
+    <div class="table" id="table">
+      <div class="placemat"></div>
 
-<div class="table">
+      <!-- TARGET INVISIBILI -->
+      <div class="target" id="t-plate"  data-target="plate"></div>
+      <div class="target" id="t-fork"   data-target="fork"></div>
+      <div class="target" id="t-knife"  data-target="knife"></div>
+      <div class="target" id="t-spoon"  data-target="spoon"></div>
+      <div class="target" id="t-water"  data-target="water"></div>
+      <div class="target" id="t-wine"   data-target="wine"></div>
+      <div class="target" id="t-napkin" data-target="napkin"></div>
+    </div>
 
-<div class="place"></div>
+    <!-- TOOLBOX: SOLO OGGETTI -->
+    <div class="toolbox" id="toolbox">
+      <!-- ordine non-soluzione -->
+      <div class="draggable" data-item="wine"   aria-label="Bicchiere vino">🍷</div>
+      <div class="draggable" data-item="fork"   aria-label="Forchetta">🍴</div>
+      <div class="draggable" data-item="napkin" aria-label="Tovagliolo">🧻</div>
+      <div class="draggable" data-item="spoon"  aria-label="Cucchiaio">🥄</div>
+      <div class="draggable" data-item="plate"  aria-label="Piatto">🍽️</div>
+      <div class="draggable" data-item="knife"  aria-label="Coltello">🔪</div>
+      <div class="draggable" data-item="water"  aria-label="Bicchiere acqua">🥛</div>
+    </div>
 
-<!-- DROPZONE -->
-<div class="dropzone" id="zone-plate" data-zone="plate">
-<div class="zone-label">Piatto</div>
-</div>
-
-<div class="dropzone" id="zone-fork" data-zone="fork">
-<div class="zone-label">Forchetta</div>
-</div>
-
-<div class="dropzone" id="zone-knife" data-zone="knife">
-<div class="zone-label">Coltello</div>
-</div>
-
-<div class="dropzone" id="zone-spoon" data-zone="spoon">
-<div class="zone-label">Cucchiaio</div>
-</div>
-
-<div class="dropzone" id="zone-water" data-zone="water">
-<div class="zone-label">Acqua</div>
-</div>
-
-<div class="dropzone" id="zone-wine" data-zone="wine">
-<div class="zone-label">Vino</div>
-</div>
-
-<div class="dropzone" id="zone-napkin" data-zone="napkin">
-<div class="zone-label">Tovagliolo</div>
-</div>
-
-</div>
-</div>
-
-<!-- ELEMENTI DA TRASCINARE (ordine non soluzione) -->
-<div class="draggables" id="draggables">
-
-<div class="draggable" data-item="fork">
-<span class="emo">🍴</span> Forchetta
-</div>
-
-<div class="draggable" data-item="water">
-<span class="emo">🥛</span> Bicchiere acqua
-</div>
-
-<div class="draggable" data-item="knife">
-<span class="emo">🔪</span> Coltello
-</div>
-
-<div class="draggable" data-item="wine">
-<span class="emo">🍷</span> Bicchiere vino
-</div>
-
-<div class="draggable" data-item="napkin">
-<span class="emo">🧻</span> Tovagliolo
-</div>
-
-<div class="draggable" data-item="spoon">
-<span class="emo">🥄</span> Cucchiaio
-</div>
-
-<div class="draggable" data-item="plate">
-<span class="emo">🍽️</span> Piatto
-</div>
-
-</div>
+  </div>
 
 <script>
-let draggedItem=null;
-let preview=null;
+let draggedItem = null;
+let preview = null;
+let grabOffsetX = 0;
+let grabOffsetY = 0;
 
-let grabOffsetX=0;
-let grabOffsetY=0;
+const table = document.getElementById("table");
+const targets = Array.from(document.querySelectorAll(".target"));
 
-document.querySelectorAll(".draggable").forEach(item=>{
-  item.addEventListener("pointerdown", startDrag);
+document.querySelectorAll(".draggable").forEach(el=>{
+  el.addEventListener("pointerdown", startDrag);
 });
 
 function startDrag(e){
-
   e.preventDefault();
+  draggedItem = e.currentTarget;
 
-  draggedItem=e.currentTarget;
+  const rect = draggedItem.getBoundingClientRect();
+  grabOffsetX = e.clientX - rect.left;
+  grabOffsetY = e.clientY - rect.top;
 
-  const rect=draggedItem.getBoundingClientRect();
-  grabOffsetX=e.clientX-rect.left;
-  grabOffsetY=e.clientY-rect.top;
-
-  preview=draggedItem.cloneNode(true);
+  preview = draggedItem.cloneNode(true);
   preview.classList.add("drag-preview");
   document.body.appendChild(preview);
 
   movePreview(e);
 
   draggedItem.setPointerCapture(e.pointerId);
-
   document.addEventListener("pointermove", movePreview);
   document.addEventListener("pointerup", endDrag);
 }
 
 function movePreview(e){
   if(!preview) return;
-  preview.style.left=(e.clientX-grabOffsetX)+"px";
-  preview.style.top=(e.clientY-grabOffsetY)+"px";
+  preview.style.left = (e.clientX - grabOffsetX) + "px";
+  preview.style.top  = (e.clientY - grabOffsetY) + "px";
 }
 
 function endDrag(e){
-
   if(!preview) return;
 
-  let targetZone=null;
+  const itemType = draggedItem.dataset.item;
+  let hit = null;
 
-  document.querySelectorAll(".dropzone").forEach(zone=>{
-    const rect=zone.getBoundingClientRect();
-    if(
-      e.clientX>rect.left &&
-      e.clientX<rect.right &&
-      e.clientY>rect.top &&
-      e.clientY<rect.bottom
-    ){
-      targetZone=zone;
+  targets.forEach(t=>{
+    const r = t.getBoundingClientRect();
+    if(e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom){
+      hit = t;
     }
   });
 
   preview.remove();
-  preview=null;
+  preview = null;
 
   document.removeEventListener("pointermove", movePreview);
   document.removeEventListener("pointerup", endDrag);
 
-  if(!targetZone){
-    draggedItem=null;
+  if(!hit){
+    draggedItem = null;
     return;
   }
 
-  if(targetZone.classList.contains("correct")){
-    draggedItem=null;
+  if(hit.classList.contains("correct")){
+    // target già occupato
+    flashWrong(hit);
+    draggedItem = null;
     return;
   }
 
-  if(targetZone.dataset.zone === draggedItem.dataset.item){
-
-    targetZone.innerHTML="";
-    targetZone.appendChild(draggedItem);
-
-    draggedItem.style.pointerEvents="none";
-    targetZone.classList.add("correct");
-
+  if(hit.dataset.target === itemType){
+    placeOnTable(itemType, hit);
+    draggedItem.remove(); // sparisce dalla toolbox
+    hit.classList.add("correct");
     checkWin();
-
   }else{
-
-    targetZone.classList.add("wrong");
-    setTimeout(()=>{targetZone.classList.remove("wrong");},600);
-
+    flashWrong(hit);
   }
 
-  draggedItem=null;
+  draggedItem = null;
+}
+
+function flashWrong(target){
+  target.classList.add("wrong");
+  setTimeout(()=>target.classList.remove("wrong"), 450);
+}
+
+function placeOnTable(itemType, target){
+  const obj = document.createElement("div");
+  obj.className = "on-table " + (itemType === "plate" ? "plate" : "");
+  obj.textContent = emojiFor(itemType);
+
+  // posiziona l’oggetto centrato sul target (dentro la table)
+  const tableRect = table.getBoundingClientRect();
+  const tRect = target.getBoundingClientRect();
+
+  const centerX = (tRect.left + tRect.right)/2 - tableRect.left;
+  const centerY = (tRect.top + tRect.bottom)/2 - tableRect.top;
+
+  obj.style.left = centerX + "px";
+  obj.style.top  = centerY + "px";
+  obj.style.transform = "translate(-50%, -50%)";
+
+  table.appendChild(obj);
+}
+
+function emojiFor(itemType){
+  switch(itemType){
+    case "plate": return "🍽️";
+    case "fork": return "🍴";
+    case "knife": return "🔪";
+    case "spoon": return "🥄";
+    case "water": return "🥛";
+    case "wine": return "🍷";
+    case "napkin": return "🧻";
+    default: return "❓";
+  }
 }
 
 function checkWin(){
-  let correct=document.querySelectorAll(".dropzone.correct").length;
-  if(correct===7){
-    setTimeout(()=>{
-      window.location.href="stanza9.html";
-    },900);
+  const done = document.querySelectorAll(".target.correct").length;
+  if(done === targets.length){
+    setTimeout(()=>{ window.location.href = "stanza9.html"; }, 700);
   }
 }
 </script>
