@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stanza 8 - Mise en place</title>
+<title>Stanza 8</title>
 
 <style>
 html,body{
@@ -15,9 +15,9 @@ html,body{
   flex-direction:column;
   align-items:center;
   color:#fff;
-  overflow:hidden;
 }
 
+/* HEADER */
 .header{
   padding:20px 0 10px;
   text-align:center;
@@ -26,81 +26,31 @@ html,body{
 /* TAVOLO */
 .table{
   width:min(820px,96vw);
-  aspect-ratio:4/3;
+  aspect-ratio:1;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:repeat(4,1fr);
   position:relative;
-  border-radius:24px;
+  border-radius:18px;
   overflow:hidden;
-  box-shadow:0 25px 60px rgba(0,0,0,.6);
+  box-shadow:0 20px 50px rgba(0,0,0,.6);
 
   background:
-    repeating-linear-gradient(0deg,#ffffff,#ffffff 40px,#f2f2f2 40px,#f2f2f2 80px),
-    repeating-linear-gradient(90deg,#ffffff,#ffffff 40px,#f2f2f2 40px,#f2f2f2 80px);
+    repeating-linear-gradient(0deg,#fff,#fff 40px,#f2f2f2 40px,#f2f2f2 80px),
+    repeating-linear-gradient(90deg,#fff,#fff 40px,#f2f2f2 40px,#f2f2f2 80px);
 }
 
-/* TARGET AMPI */
-.target{
-  position:absolute;
-  border-radius:50%;
-  width:260px;
-  height:260px;
-  z-index:1;
-}
-
-/* CENTRO */
-#t-center{
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-}
-
-/* SINISTRA */
-#t-fork-main{
-  top:50%; left:30%;
-  transform:translate(-50%,-50%);
-  width:200px; height:260px;
-}
-#t-fork-second{
-  top:50%; left:18%;
-  transform:translate(-50%,-50%);
-  width:200px; height:260px;
-}
-
-/* DESTRA */
-#t-knife{
-  top:50%; left:70%;
-  transform:translate(-50%,-50%);
-  width:200px; height:260px;
-}
-#t-spoon{
-  top:50%; left:83%;
-  transform:translate(-50%,-50%);
-  width:200px; height:260px;
-}
-
-/* BICCHIERI */
-#t-water{
-  top:25%; left:75%;
-  transform:translate(-50%,-50%);
-  width:180px; height:180px;
-}
-#t-wine{
-  top:22%; left:88%;
-  transform:translate(-50%,-50%);
-  width:180px; height:180px;
-}
-
-/* DESSERT */
-#t-dessert{
-  top:20%; left:50%;
-  transform:translate(-50%,-50%);
-  width:260px; height:120px;
+/* CELLE DEBUG */
+.cell{
+  border:1px solid rgba(0,0,0,.08);
+  position:relative;
 }
 
 /* OGGETTI */
 .on-table{
   position:absolute;
   pointer-events:none;
-  z-index:10;
+  z-index:5;
 }
 
 .on-table img{
@@ -151,35 +101,21 @@ html,body{
 <body>
 
 <div class="header">
-  <h1>Stanza 8</h1>
-  <p>Completa la mise en place corretta.</p>
+  <h2>Stanza 8</h2>
+  <p>Completa la mise en place corretta</p>
 </div>
 
 <div class="table" id="table">
-
-  <div class="target" id="t-center"></div>
-
-  <div class="target" id="t-fork-main"></div>
-  <div class="target" id="t-fork-second"></div>
-
-  <div class="target" id="t-knife"></div>
-  <div class="target" id="t-spoon"></div>
-
-  <div class="target" id="t-water"></div>
-  <div class="target" id="t-wine"></div>
-
-  <div class="target" id="t-dessert"></div>
-
+  <!-- 16 celle -->
 </div>
 
 <div class="toolbox">
-
   <div class="draggable" data-item="plate-dinner"><img src="plate-dinner.png"></div>
   <div class="draggable" data-item="plate-soup"><img src="plate-soup.png"></div>
   <div class="draggable" data-item="napkin"><img src="napkin.png"></div>
 
-  <div class="draggable" data-item="fork-main"><img src="fork.png"></div>
   <div class="draggable" data-item="fork-second"><img src="fork.png"></div>
+  <div class="draggable" data-item="fork-main"><img src="fork.png"></div>
 
   <div class="draggable" data-item="knife"><img src="knife.png"></div>
   <div class="draggable" data-item="spoon"><img src="spoon.png"></div>
@@ -188,14 +124,25 @@ html,body{
   <div class="draggable" data-item="glass-wine"><img src="glass-wine.png"></div>
 
   <div class="draggable" data-item="spoon-dessert"><img src="spoon-dessert.png"></div>
-
 </div>
 
 <script>
-let dragged=null, preview=null;
 const table=document.getElementById("table");
+let dragged=null, preview=null;
 let placed=[];
-const SNAP_DISTANCE=160;
+
+/* CREA GRIGLIA */
+const cols=["A","B","C","D"];
+for(let r=1;r<=4;r++){
+  for(let c=0;c<4;c++){
+    const cell=document.createElement("div");
+    cell.className="cell";
+    cell.dataset.pos=cols[c]+r;
+    table.appendChild(cell);
+  }
+}
+
+const cells=[...document.querySelectorAll(".cell")];
 
 document.querySelectorAll(".draggable").forEach(el=>{
   el.addEventListener("pointerdown",startDrag);
@@ -216,77 +163,102 @@ function move(e){
   preview.style.top=(e.clientY-32)+"px";
 }
 
-function nearestTarget(x,y){
-  let best=null, bestDist=9999;
-  document.querySelectorAll(".target").forEach(t=>{
-    const r=t.getBoundingClientRect();
-    const cx=r.left+r.width/2;
-    const cy=r.top+r.height/2;
-    const dist=Math.hypot(x-cx,y-cy);
-    if(dist<SNAP_DISTANCE && dist<bestDist){
-      best=t;
-      bestDist=dist;
-    }
+function getCell(x,y){
+  return cells.find(cell=>{
+    const r=cell.getBoundingClientRect();
+    return x>r.left && x<r.right && y>r.top && y<r.bottom;
   });
-  return best;
 }
 
 function drop(e){
   document.removeEventListener("pointermove",move);
   document.removeEventListener("pointerup",drop);
-
-  const target=nearestTarget(e.clientX,e.clientY);
   preview.remove();
-  if(!target) return;
 
+  const cell=getCell(e.clientX,e.clientY);
+  if(!cell) return;
+
+  const pos=cell.dataset.pos;
   const item=dragged.dataset.item;
 
-  /* CENTRO LOGICO */
-  if(target.id==="t-center"){
+  /* CENTRO */
+  if(["B2","B3","C2","C3"].includes(pos)){
     if(item==="plate-dinner" && !placed.includes("plate-dinner")){
-      place(item,target,240);
+      placeCenter("plate-dinner",240);
     }
     else if(item==="plate-soup" && placed.includes("plate-dinner")){
-      place(item,target,190);
+      placeCenter("plate-soup",190);
     }
     else if(item==="napkin" && placed.includes("plate-soup")){
-      place(item,target,170);
+      placeCenter("napkin",170);
     }
     else return;
   }
-  else{
-    const id=target.id.replace("t-","");
-    if(item!==id) return;
-    place(item,target,120);
-  }
+
+  /* FORCHETTE */
+  else if(pos==="A2" && item==="fork-second") placeCell(item,cell);
+  else if(pos==="A3" && item==="fork-main") placeCell(item,cell);
+
+  /* DESTRA */
+  else if(pos==="D2" && item==="knife") placeCell(item,cell);
+  else if(pos==="D3" && item==="spoon") placeCell(item,cell);
+
+  /* DESSERT */
+  else if(["B1","C1"].includes(pos) && item==="spoon-dessert")
+    placeSpan(item,1,2,120);
+
+  /* BICCHIERI */
+  else if(pos==="C1" && item==="glass-water") placeCell(item,cell);
+  else if(pos==="D1" && item==="glass-wine") placeCell(item,cell);
+  else return;
 
   dragged.remove();
   placed.push(item);
   checkWin();
 }
 
-function place(item,target,size){
+function placeCell(item,cell){
   const div=document.createElement("div");
   div.className="on-table";
-  div.style.width=size+"px";
+  div.style.width="120px";
 
   const img=document.createElement("img");
-  img.src=(item.includes("fork"))?"fork.png":item+".png";
+  img.src=item.includes("fork")?"fork.png":item+".png";
   div.appendChild(img);
 
-  const r=target.getBoundingClientRect();
-  const tr=table.getBoundingClientRect();
+  const r=cell.getBoundingClientRect();
+  const t=table.getBoundingClientRect();
 
-  div.style.left=(r.left-tr.left+r.width/2)+"px";
-  div.style.top=(r.top-tr.top+r.height/2)+"px";
+  div.style.left=(r.left-t.left+r.width/2)+"px";
+  div.style.top=(r.top-t.top+r.height/2)+"px";
   div.style.transform="translate(-50%,-50%)";
 
   table.appendChild(div);
 }
 
+function placeCenter(item,size){
+  const div=document.createElement("div");
+  div.className="on-table";
+  div.style.width=size+"px";
+
+  const img=document.createElement("img");
+  img.src=item+".png";
+  div.appendChild(img);
+
+  div.style.left="50%";
+  div.style.top="50%";
+  div.style.transform="translate(-50%,-50%)";
+
+  table.appendChild(div);
+}
+
+function placeSpan(item,rowSpan,colSpan,size){
+  placeCenter(item,size);
+}
+
 function checkWin(){
   if(placed.length===10){
-    setTimeout(()=>{window.location.href="stanza9.html";},800);
+    setTimeout(()=>window.location.href="stanza9.html",800);
   }
 }
 </script>
