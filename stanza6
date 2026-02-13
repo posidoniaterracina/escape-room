@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stanza 6</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#1e3c72,#2a5298);
+color:white;
+text-align:center;
+overflow-x:hidden;
+}
+
+h1{
+margin-top:25px;
+}
+
+p{
+opacity:.9;
+}
+
+/* DROP AREA */
+.container{
+max-width:600px;
+margin:30px auto;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.slot{
+background:rgba(255,255,255,0.1);
+border:2px dashed rgba(255,255,255,0.5);
+border-radius:12px;
+padding:20px;
+min-height:70px;
+display:flex;
+align-items:center;
+justify-content:center;
+transition:.3s;
+font-weight:bold;
+}
+
+.slot.correct{
+background:#28a745;
+border-color:#fff;
+animation:pop .3s ease;
+}
+
+.slot.wrong{
+background:#dc3545;
+animation:shake .4s;
+}
+
+/* DRAGGABLES */
+.draggables{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:12px;
+margin:30px;
+}
+
+.draggable{
+padding:12px 16px;
+border-radius:25px;
+cursor:grab;
+font-weight:bold;
+color:white;
+user-select:none;
+touch-action:none;
+transition:.2s;
+}
+
+.draggable:active{
+transform:scale(1.1);
+}
+
+.costituzione{background:#ff9800;}
+.legge{background:#4caf50;}
+.regolamento{background:#2196f3;}
+.consuetudine{background:#9c27b0;}
+
+.drag-preview{
+position:fixed;
+z-index:9999;
+pointer-events:none;
+opacity:.95;
+padding:12px 16px;
+border-radius:25px;
+font-weight:bold;
+color:white;
+}
+
+/* ANIMAZIONI */
+@keyframes shake{
+0%{transform:translateX(0);}
+25%{transform:translateX(-6px);}
+50%{transform:translateX(6px);}
+75%{transform:translateX(-6px);}
+100%{transform:translateX(0);}
+}
+
+@keyframes pop{
+0%{transform:scale(.8);}
+100%{transform:scale(1);}
+}
+
+@keyframes glow{
+0%{box-shadow:0 0 5px white;}
+50%{box-shadow:0 0 20px white;}
+100%{box-shadow:0 0 5px white;}
+}
+
+.win{
+animation:glow 1s infinite;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📜 Stanza 6</h1>
+<p>Metti in ordine gerarchico le fonti normative (dalla più importante alla meno importante)</p>
+
+<div class="container">
+
+<div class="slot" data-rank="1">1️⃣ Livello più alto</div>
+<div class="slot" data-rank="2">2️⃣</div>
+<div class="slot" data-rank="3">3️⃣</div>
+<div class="slot" data-rank="4">4️⃣ Livello più basso</div>
+
+</div>
+
+<div class="draggables" id="draggables">
+
+<div class="draggable costituzione" data-rank="1">
+👑 Costituzione
+</div>
+
+<div class="draggable legge" data-rank="2">
+📘 Legge ordinaria
+</div>
+
+<div class="draggable regolamento" data-rank="3">
+📑 Regolamento
+</div>
+
+<div class="draggable consuetudine" data-rank="4">
+📜 Consuetudine
+</div>
+
+</div>
+
+<script>
+let draggedItem=null;
+let preview=null;
+let offsetX=0;
+let offsetY=0;
+
+document.querySelectorAll(".draggable").forEach(item=>{
+item.addEventListener("pointerdown",startDrag);
+});
+
+function startDrag(e){
+e.preventDefault();
+draggedItem=e.currentTarget;
+
+const rect=draggedItem.getBoundingClientRect();
+offsetX=e.clientX-rect.left;
+offsetY=e.clientY-rect.top;
+
+preview=draggedItem.cloneNode(true);
+preview.classList.add("drag-preview");
+preview.style.background=getComputedStyle(draggedItem).backgroundColor;
+document.body.appendChild(preview);
+
+movePreview(e);
+
+draggedItem.setPointerCapture(e.pointerId);
+
+document.addEventListener("pointermove",movePreview);
+document.addEventListener("pointerup",endDrag);
+}
+
+function movePreview(e){
+if(!preview)return;
+preview.style.left=(e.clientX-offsetX)+"px";
+preview.style.top=(e.clientY-offsetY)+"px";
+}
+
+function endDrag(e){
+
+if(!preview)return;
+
+let target=null;
+
+document.querySelectorAll(".slot").forEach(slot=>{
+const rect=slot.getBoundingClientRect();
+
+if(
+e.clientX>rect.left &&
+e.clientX<rect.right &&
+e.clientY>rect.top &&
+e.clientY<rect.bottom
+){
+target=slot;
+}
+});
+
+preview.remove();
+preview=null;
+
+document.removeEventListener("pointermove",movePreview);
+document.removeEventListener("pointerup",endDrag);
+
+if(!target){draggedItem=null;return;}
+
+if(target.dataset.rank===draggedItem.dataset.rank){
+
+target.innerHTML=draggedItem.innerHTML;
+target.classList.add("correct");
+
+draggedItem.style.display="none";
+
+checkWin();
+
+}else{
+
+target.classList.add("wrong");
+
+setTimeout(()=>{
+target.classList.remove("wrong");
+},600);
+
+}
+
+draggedItem=null;
+}
+
+function checkWin(){
+let correct=document.querySelectorAll(".slot.correct").length;
+
+if(correct===4){
+document.querySelectorAll(".slot").forEach(s=>{
+s.classList.add("win");
+});
+
+setTimeout(()=>{
+alert("🎉 Ordine corretto! Avete sbloccato la prossima stanza!");
+// window.location.href="stanza7.html";
+},1000);
+}
+}
+</script>
+
+</body>
+</html>
