@@ -6,6 +6,10 @@
 <title>Stanza 5</title>
 
 <style>
+html, body{
+overflow-x:hidden;
+}
+
 body{
 font-family:Arial;
 background:#f4f4f4;
@@ -72,7 +76,7 @@ padding:12px 16px;
 border-radius:10px;
 cursor:grab;
 max-width:280px;
-touch-action:none; /* IMPORTANTISSIMO per mobile */
+touch-action:none;
 user-select:none;
 }
 
@@ -88,8 +92,61 @@ border-radius:10px;
 max-width:280px;
 }
 
+/* MOBILE: tutto visibile */
 @media (max-width:768px){
-.grid{grid-template-columns:1fr;}
+
+body{
+padding:10px;
+}
+
+h1{
+font-size:20px;
+margin-top:15px;
+}
+
+p{
+font-size:14px;
+}
+
+.grid{
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin:15px auto;
+width:100%;
+}
+
+.dropzone{
+min-height:120px;
+padding:10px;
+border-width:2px;
+}
+
+.dropzone img{
+width:70px;
+height:90px;
+margin-bottom:6px;
+}
+
+.dropzone div{
+font-size:13px;
+}
+
+.draggables{
+gap:8px;
+margin:15px 5px;
+}
+
+.draggable{
+font-size:13px;
+padding:8px 10px;
+max-width:160px;
+}
+
+.drag-preview{
+font-size:13px;
+padding:8px 10px;
+max-width:160px;
+}
 }
 </style>
 </head>
@@ -156,27 +213,22 @@ document.querySelectorAll(".draggable").forEach(item=>{
 
 function startDrag(e){
 
-  // blocca lo scroll mobile durante il drag
   e.preventDefault();
 
   draggedItem = e.currentTarget;
 
-  // calcolo offset reale tra dito e elemento
   const rect = draggedItem.getBoundingClientRect();
   grabOffsetX = e.clientX - rect.left;
   grabOffsetY = e.clientY - rect.top;
 
-  // FORZA SEMPRE RIENTRO NEL CONTENITORE ORIGINALE
   document.getElementById("draggables").appendChild(draggedItem);
 
   preview = draggedItem.cloneNode(true);
   preview.classList.add("drag-preview");
   document.body.appendChild(preview);
 
-  // posizionamento iniziale corretto
   movePreview(e);
 
-  // cattura il puntatore: evita salti se il dito esce dall'elemento
   draggedItem.setPointerCapture(e.pointerId);
 
   document.addEventListener("pointermove", movePreview);
