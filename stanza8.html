@@ -57,6 +57,7 @@ html,body{
   width:100%;
   height:auto;
   display:block;
+  user-select:none;
 }
 
 /* TOOLBOX */
@@ -129,7 +130,6 @@ let dragged=null, preview=null;
 let placed=[];
 
 /* CREA AREE VISIVE */
-
 function addZone(left,top,width,height){
   const z=document.createElement("div");
   z.className="drop-zone";
@@ -159,7 +159,6 @@ addZone("60%","15%","10%","10%");
 addZone("70%","15%","10%","10%");
 
 /* DRAG */
-
 document.querySelectorAll(".draggable").forEach(el=>{
   el.addEventListener("pointerdown",startDrag);
 });
@@ -205,11 +204,11 @@ function drop(e){
   /* CENTRO */
   if(inside(x,y,.35,.40,.30,.30)){
     if(item==="plate-dinner" && !placed.includes("plate-dinner"))
-      place("plate-dinner","50%","60%","380px");
+      place("plate-dinner.png","50%","60%","380px");
     else if(item==="plate-soup" && placed.includes("plate-dinner"))
-      place("plate-soup","50%","60%","260px");
+      place("plate-soup.png","50%","60%","260px");
     else if(item==="napkin" && placed.includes("plate-soup"))
-      place("napkin","50%","60%","200px");
+      place("napkin.png","50%","60%","200px");
     else return;
   }
 
@@ -228,9 +227,8 @@ function drop(e){
     place("spoon.png","85%","55%","120px");
 
   /* DESSERT */
-  else if(inside(x,y,.35,.15,.30,.10) && item==="spoon-dessert"){
+  else if(inside(x,y,.35,.15,.30,.10) && item==="spoon-dessert")
     place("spoon-dessert.png","50%","20%","200px",true);
-  }
 
   /* BICCHIERI */
   else if(inside(x,y,.60,.15,.10,.10) && item==="glass-water")
