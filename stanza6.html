@@ -7,87 +7,44 @@
 
 <style>
 html, body{
-margin:0;
 height:100%;
-font-family:Arial;
-color:white;
-text-align:center;
+margin:0;
 overflow-x:hidden;
-background:#2b1d14;
+font-family:Arial;
 }
 
-/* ===== LIBRERIA DI TOMI ===== */
-.bookshelf{
+/* SFONDO */
+.bg{
 position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-display:flex;
-z-index:-1;
+background-image:url("sfondo_legge.jpg");
+background-repeat:no-repeat;
+
+/* IMPORTANTI */
+background-position:center top;
+background-size:cover;
+
+z-index:-3;
+
+/* migliora leggibilità senza “uccidere” la foto */
+filter:brightness(0.85) saturate(1.1);
 }
 
-.book{
-flex:1;
-margin:0 2px;
-border-radius:4px;
-position:relative;
-box-shadow:
-inset -4px 0 8px rgba(0,0,0,0.4),
-inset 4px 0 6px rgba(255,255,255,0.05);
-}
-
-/* Riga dorata centrale */
-.book::after{
-content:"";
-position:absolute;
-top:20%;
-left:50%;
-transform:translateX(-50%);
-width:3px;
-height:60%;
-background:rgba(255,215,0,0.35);
-}
-
-/* Effetto titolo */
-.book::before{
-content:"LEX";
-position:absolute;
-top:40%;
-left:50%;
-transform:translate(-50%, -50%) rotate(-90deg);
-font-size:12px;
-letter-spacing:2px;
-color:rgba(255,215,0,0.6);
-}
-
-/* Colori pelle alternati */
-.book:nth-child(1){background:#5a2e1f;}
-.book:nth-child(2){background:#3e1f15;}
-.book:nth-child(3){background:#6b3a25;}
-.book:nth-child(4){background:#402017;}
-.book:nth-child(5){background:#7a4630;}
-.book:nth-child(6){background:#4d2618;}
-.book:nth-child(7){background:#5e3324;}
-.book:nth-child(8){background:#3a1c12;}
-.book:nth-child(9){background:#6a3c28;}
-.book:nth-child(10){background:#4a2417;}
-.book:nth-child(11){background:#5c2f20;}
-.book:nth-child(12){background:#3f1e14;}
-
-/* Overlay leggero */
+/* Overlay (più leggero di prima) */
 .overlay{
 position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.55);
-z-index:-1;
+background:rgba(0,0,0,0.45);
+z-index:-2;
 }
 
-/* ===== CONTENUTO ===== */
-
+/* Contenuto */
 .main{
 min-height:100vh;
 display:flex;
@@ -96,6 +53,8 @@ align-items:center;
 justify-content:flex-start;
 padding:20px 10px;
 box-sizing:border-box;
+text-align:center;
+color:white;
 }
 
 h1{
@@ -115,11 +74,11 @@ margin-bottom:18px;
 width:92%;
 max-width:680px;
 background:rgba(0,0,0,0.45);
-border:1px solid rgba(255,255,255,0.2);
+border:1px solid rgba(255,255,255,0.22);
 border-radius:18px;
 padding:18px;
 backdrop-filter:blur(6px);
-box-shadow:0 10px 30px rgba(0,0,0,0.5);
+box-shadow:0 10px 30px rgba(0,0,0,0.45);
 }
 
 /* DOMANDA */
@@ -147,13 +106,13 @@ cursor:pointer;
 color:white;
 text-align:left;
 transition:.2s;
-background:rgba(255,255,255,0.15);
-border:1px solid rgba(255,255,255,0.2);
+background:rgba(255,255,255,0.14);
+border:1px solid rgba(255,255,255,0.22);
 }
 
 .answer:hover{
-transform:scale(1.02);
-background:rgba(255,255,255,0.25);
+transform:scale(1.01);
+background:rgba(255,255,255,0.22);
 }
 
 .answer.correct{
@@ -204,22 +163,7 @@ h1{font-size:22px;}
 
 <body>
 
-<!-- Sfondo libreria -->
-<div class="bookshelf">
-  <div class="book"></div>
-  <div class="book"></div>
-  <div class="book"></div>
-  <div class="book"></div>
-  <div class="book"></div>
-  <div class="book"></div>
-  <div class="book"></div>
-  <div class="book"></div>
-  <div class="book"></div>
-  <div class="book"></div>
-  <div class="book"></div>
-  <div class="book"></div>
-</div>
-
+<div class="bg"></div>
 <div class="overlay"></div>
 
 <div class="main">
@@ -261,20 +205,20 @@ correctIndex: 2
 {
 q: "Se una legge ordinaria è in contrasto con la Costituzione:",
 options: [
-"Può essere dichiarata incostituzionale",
-"La Costituzione perde valore",
-"Vale la legge più recente",
-"Decide il Sindaco"
+"✅ Può essere dichiarata incostituzionale",
+"📌 La Costituzione perde valore",
+"📌 Vale la legge più recente",
+"📌 Decide il Sindaco"
 ],
 correctIndex: 0
 },
 {
 q: "I regolamenti sono emanati principalmente da:",
 options: [
-"Il Governo / Pubblica Amministrazione",
-"I cittadini",
-"La Corte Costituzionale",
-"I Tribunali ordinari"
+"🏛️ Il Governo / Pubblica Amministrazione",
+"👥 I cittadini",
+"⚖️ La Corte Costituzionale",
+"📰 I giornali"
 ],
 correctIndex: 0
 }
@@ -347,4 +291,3 @@ answersEl.appendChild(btn);
 
 </body>
 </html>
-
