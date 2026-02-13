@@ -128,15 +128,22 @@ animation:glow 1s infinite;
 <p>Metti in ordine gerarchico le fonti normative (dalla più importante alla meno importante)</p>
 
 <div class="container">
-
 <div class="slot" data-rank="1">1️⃣ Livello più alto</div>
 <div class="slot" data-rank="2">2️⃣</div>
 <div class="slot" data-rank="3">3️⃣</div>
 <div class="slot" data-rank="4">4️⃣ Livello più basso</div>
-
 </div>
 
 <div class="draggables" id="draggables">
+
+<!-- ORDINE MESCOLATO (NON SOLUZIONE) -->
+<div class="draggable regolamento" data-rank="3">
+📑 Regolamento
+</div>
+
+<div class="draggable consuetudine" data-rank="4">
+📜 Consuetudine
+</div>
 
 <div class="draggable costituzione" data-rank="1">
 👑 Costituzione
@@ -144,14 +151,6 @@ animation:glow 1s infinite;
 
 <div class="draggable legge" data-rank="2">
 📘 Legge ordinaria
-</div>
-
-<div class="draggable regolamento" data-rank="3">
-📑 Regolamento
-</div>
-
-<div class="draggable consuetudine" data-rank="4">
-📜 Consuetudine
 </div>
 
 </div>
@@ -220,6 +219,12 @@ document.removeEventListener("pointerup",endDrag);
 
 if(!target){draggedItem=null;return;}
 
+/* BLOCCO SE SLOT GIÀ RIEMPITO */
+if(target.classList.contains("correct")){
+draggedItem=null;
+return;
+}
+
 if(target.dataset.rank===draggedItem.dataset.rank){
 
 target.innerHTML=draggedItem.innerHTML;
@@ -246,14 +251,15 @@ function checkWin(){
 let correct=document.querySelectorAll(".slot.correct").length;
 
 if(correct===4){
+
 document.querySelectorAll(".slot").forEach(s=>{
 s.classList.add("win");
 });
 
 setTimeout(()=>{
-alert("🎉 Ordine corretto! Avete sbloccato la prossima stanza!");
-// window.location.href="stanza7.html";
-},1000);
+window.location.href="stanza7.html";
+},900);
+
 }
 }
 </script>
