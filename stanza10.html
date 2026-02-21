@@ -2,180 +2,192 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Escape School</title>
+<title>Drag & Drop Vini Italiani</title>
 
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-    overflow:hidden;
-    background:#0f172a;
-    font-family:Arial;
-    touch-action:none;
+body{
+    font-family: Arial, sans-serif;
+    text-align:center;
+    background:#ececec;
 }
 
-#camera {
-    width:100vw;
-    height:100vh;
-    overflow:hidden;
+h1{
+    margin-top:30px;
+}
+
+/* CONTENITORE */
+.container{
+    display:flex;
+    justify-content:space-around;
+    align-items:flex-end;
+    margin-top:80px;
+}
+
+/* BOTTIGLIA */
+.bottle{
     position:relative;
-    cursor:grab;
+    width:140px;
+    height:380px;
 }
 
-#map {
+/* Collo */
+.neck{
     position:absolute;
-    width:2500px;
-    height:1600px;
-    background:#f1f5f9;
-    border:30px solid #111;
-    transform-origin:0 0;
-    will-change: transform;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:40px;
+    height:90px;
+    background:#1c1c1c;
+    border-radius:15px;
 }
 
-.room {
+/* Corpo */
+.body{
     position:absolute;
-    background:#d1d5db;
-    border:10px solid #111;
+    bottom:0;
+    width:140px;
+    height:300px;
+    background:linear-gradient(to bottom,#2e2e2e,#1a1a1a);
+    border-radius:70px 70px 25px 25px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding-top:60px;
+    box-shadow:0 8px 15px rgba(0,0,0,0.3);
+}
+
+.region{
+    color:white;
+    font-weight:bold;
+    margin-bottom:25px;
+}
+
+.dropzone{
+    width:100px;
+    height:70px;
+    background:#f9f9f9;
+    border:2px dashed #aaa;
     display:flex;
     align-items:center;
     justify-content:center;
+    border-radius:8px;
+    font-size:14px;
+}
+
+/* ETICHETTE */
+.labels{
+    margin-top:80px;
+    display:flex;
+    justify-content:center;
+    gap:25px;
+}
+
+.label{
+    padding:12px 22px;
+    background:linear-gradient(145deg,#b31217,#7b0c12);
+    color:white;
+    border-radius:8px;
+    cursor:grab;
     font-weight:bold;
+    box-shadow:0 5px 10px rgba(0,0,0,0.3);
+    transition:0.2s;
 }
 
-#a1 { top:100px; left:200px; width:500px; height:300px; }
-#a2 { top:120px; left:800px; width:400px; height:350px; }
-#a3 { top:150px; left:1400px; width:600px; height:280px; }
-
-#corr1 {
-    position:absolute;
-    top:500px;
-    left:0;
-    width:100%;
-    height:200px;
-    background:#9ca3af;
+.label:hover{
+    transform:scale(1.05);
 }
 
-#a4 { top:800px; left:200px; width:600px; height:400px; }
-#bagno { top:820px; left:900px; width:300px; height:250px; }
-#presidenza { top:820px; left:1300px; width:700px; height:350px; }
+.correct{
+    background:linear-gradient(145deg,#1e7e34,#145523) !important;
+}
 </style>
 </head>
-
 <body>
 
-<div id="camera">
-    <div id="map">
+<h1>Abbina il vino alla regione corretta</h1>
 
-        <div id="a1" class="room">A1</div>
-        <div id="a2" class="room">A2</div>
-        <div id="a3" class="room">A3</div>
+<div class="container">
 
-        <div id="corr1"></div>
-
-        <div id="a4" class="room">A4</div>
-        <div id="bagno" class="room">WC</div>
-        <div id="presidenza" class="room">PR</div>
-
+    <div class="bottle">
+        <div class="neck"></div>
+        <div class="body">
+            <div class="region">Piemonte</div>
+            <div class="dropzone" data-correct="Barolo"></div>
+        </div>
     </div>
+
+    <div class="bottle">
+        <div class="neck"></div>
+        <div class="body">
+            <div class="region">Veneto</div>
+            <div class="dropzone" data-correct="Amarone"></div>
+        </div>
+    </div>
+
+    <div class="bottle">
+        <div class="neck"></div>
+        <div class="body">
+            <div class="region">Toscana</div>
+            <div class="dropzone" data-correct="Chianti"></div>
+        </div>
+    </div>
+
+    <div class="bottle">
+        <div class="neck"></div>
+        <div class="body">
+            <div class="region">Sicilia</div>
+            <div class="dropzone" data-correct="Nero d'Avola"></div>
+        </div>
+    </div>
+
+</div>
+
+<div class="labels">
+    <div class="label" draggable="true">Chianti</div>
+    <div class="label" draggable="true">Barolo</div>
+    <div class="label" draggable="true">Amarone</div>
+    <div class="label" draggable="true">Nero d'Avola</div>
 </div>
 
 <script>
-const map = document.getElementById("map");
-const camera = document.getElementById("camera");
+const labels = document.querySelectorAll('.label');
+const dropzones = document.querySelectorAll('.dropzone');
+let score = 0;
+let draggedElement = null;
+let originalParent = null;
 
-let scale = 1;
-let pos = { x: -500, y: -300 };
-let velocity = { x: 0, y: 0 };
-let isDragging = false;
-let lastTouch = null;
-let initialDistance = null;
-
-function animate() {
-    pos.x += velocity.x;
-    pos.y += velocity.y;
-
-    velocity.x *= 0.92;
-    velocity.y *= 0.92;
-
-    map.style.transform =
-        `translate(${pos.x}px, ${pos.y}px) scale(${scale})`;
-
-    requestAnimationFrame(animate);
-}
-animate();
-
-/* DESKTOP DRAG */
-camera.addEventListener("mousedown", e => {
-    isDragging = true;
-    lastTouch = { x: e.clientX, y: e.clientY };
+labels.forEach(label=>{
+    label.addEventListener('dragstart',e=>{
+        draggedElement = label;
+        originalParent = label.parentNode;
+        e.dataTransfer.setData("text", label.textContent);
+    });
 });
 
-window.addEventListener("mouseup", () => {
-    isDragging = false;
-});
+dropzones.forEach(zone=>{
+    zone.addEventListener('dragover',e=>e.preventDefault());
 
-window.addEventListener("mousemove", e => {
-    if (!isDragging) return;
+    zone.addEventListener('drop',e=>{
+        e.preventDefault();
+        const data = e.dataTransfer.getData("text");
 
-    velocity.x = e.clientX - lastTouch.x;
-    velocity.y = e.clientY - lastTouch.y;
+        if(zone.textContent !== "") return;
 
-    lastTouch = { x: e.clientX, y: e.clientY };
-});
+        if(data === zone.dataset.correct){
+            zone.textContent = data;
+            zone.classList.add("correct");
+            draggedElement.remove();
+            score++;
 
-/* DESKTOP ZOOM */
-camera.addEventListener("wheel", e => {
-    e.preventDefault();
-    const zoom = e.deltaY < 0 ? 1.1 : 0.9;
-    scale *= zoom;
-    scale = Math.min(Math.max(scale, 0.4), 3);
-});
-
-/* MOBILE TOUCH */
-camera.addEventListener("touchstart", e => {
-    if (e.touches.length === 1) {
-        lastTouch = {
-            x: e.touches[0].clientX,
-            y: e.touches[0].clientY
-        };
-    }
-
-    if (e.touches.length === 2) {
-        initialDistance = getDistance(e.touches[0], e.touches[1]);
-    }
-});
-
-camera.addEventListener("touchmove", e => {
-    e.preventDefault();
-
-    if (e.touches.length === 1) {
-        velocity.x = e.touches[0].clientX - lastTouch.x;
-        velocity.y = e.touches[0].clientY - lastTouch.y;
-
-        lastTouch = {
-            x: e.touches[0].clientX,
-            y: e.touches[0].clientY
-        };
-    }
-
-    if (e.touches.length === 2) {
-        const newDistance = getDistance(e.touches[0], e.touches[1]);
-        if (initialDistance) {
-            let zoomFactor = newDistance / initialDistance;
-            scale *= zoomFactor;
-            scale = Math.min(Math.max(scale, 0.4), 3);
-            initialDistance = newDistance;
+            if(score === 4){
+                window.location.href="stanza11.html";
+            }
+        }else{
+            // ritorna alla posizione iniziale (non serve fare nulla, rimane lì)
         }
-    }
+    });
 });
-
-function getDistance(t1, t2) {
-    return Math.hypot(
-        t2.clientX - t1.clientX,
-        t2.clientY - t1.clientY
-    );
-}
 </script>
 
 </body>
