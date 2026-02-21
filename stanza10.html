@@ -6,7 +6,7 @@
 
 <style>
 body{
-    font-family: Arial, sans-serif;
+    font-family: Georgia, serif;
     text-align:center;
     background:#ececec;
 }
@@ -15,90 +15,112 @@ h1{
     margin-top:30px;
 }
 
-.container{
+/* RIGHE 2 + 2 */
+.row{
     display:flex;
-    justify-content:space-around;
-    align-items:flex-end;
+    justify-content:center;
+    gap:120px;
     margin-top:80px;
 }
 
+/* BOTTIGLIA */
 .bottle{
     position:relative;
-    width:140px;
-    height:520px; /* aumentata altezza totale */
+    width:150px;
+    height:520px;
 }
 
-/* COLLO +300% */
+/* COLLO */
 .neck{
     position:absolute;
     top:0;
     left:50%;
     transform:translateX(-50%);
-    width:40px;
-    height:270px; /* prima 90px */
+    width:45px;
+    height:270px;
     background:#1c1c1c;
-    border-radius:20px;
+    border-radius:25px;
 }
 
 /* CORPO */
 .body{
     position:absolute;
     bottom:0;
-    width:140px;
+    width:150px;
     height:300px;
     background:linear-gradient(to bottom,#2e2e2e,#1a1a1a);
-    border-radius:70px 70px 25px 25px;
+    border-radius:80px 80px 30px 30px;
     display:flex;
     flex-direction:column;
     align-items:center;
     padding-top:60px;
-    box-shadow:0 8px 15px rgba(0,0,0,0.3);
+    box-shadow:0 10px 20px rgba(0,0,0,0.35);
 }
 
 .region{
     color:white;
     font-weight:bold;
     margin-bottom:25px;
+    font-size:16px;
 }
 
+/* AREA ETICHETTA */
 .dropzone{
-    width:100px;
-    height:70px;
-    background:#f9f9f9;
-    border:2px dashed #aaa;
+    width:110px;
+    height:85px;
+    background:#f8f5e6;
+    border:2px solid #c6a84f;
     display:flex;
     align-items:center;
     justify-content:center;
-    border-radius:8px;
+    border-radius:6px;
     font-size:14px;
+    text-align:center;
+    padding:5px;
 }
 
-/* ETICHETTE +50% */
+/* ETICHETTE REALI */
 .labels{
-    margin-top:80px;
+    margin-top:100px;
     display:flex;
     justify-content:center;
     gap:40px;
+    flex-wrap:wrap;
 }
 
 .label{
-    padding:18px 33px; /* aumentato 50% */
-    font-size:18px;    /* aumentato */
-    background:linear-gradient(145deg,#b31217,#7b0c12);
-    color:white;
-    border-radius:12px;
+    width:180px;
+    height:110px;
+    background:#f8f5e6;
+    border:3px solid #c6a84f;
+    border-radius:8px;
     cursor:grab;
-    font-weight:bold;
-    box-shadow:0 8px 15px rgba(0,0,0,0.35);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    box-shadow:0 6px 15px rgba(0,0,0,0.3);
     transition:0.2s;
 }
 
 .label:hover{
-    transform:scale(1.08);
+    transform:scale(1.05);
+}
+
+.label h3{
+    margin:0;
+    font-size:20px;
+    letter-spacing:1px;
+}
+
+.label span{
+    font-size:12px;
+    margin-top:5px;
+    color:#444;
 }
 
 .correct{
-    background:linear-gradient(145deg,#1e7e34,#145523) !important;
+    background:#f1ead2 !important;
 }
 </style>
 </head>
@@ -106,8 +128,7 @@ h1{
 
 <h1>Abbina il vino alla regione corretta</h1>
 
-<div class="container">
-
+<div class="row">
     <div class="bottle">
         <div class="neck"></div>
         <div class="body">
@@ -123,7 +144,9 @@ h1{
             <div class="dropzone" data-correct="Amarone"></div>
         </div>
     </div>
+</div>
 
+<div class="row">
     <div class="bottle">
         <div class="neck"></div>
         <div class="body">
@@ -139,26 +162,40 @@ h1{
             <div class="dropzone" data-correct="Nero d'Avola"></div>
         </div>
     </div>
-
 </div>
 
 <div class="labels">
-    <div class="label" draggable="true">Chianti</div>
-    <div class="label" draggable="true">Barolo</div>
-    <div class="label" draggable="true">Amarone</div>
-    <div class="label" draggable="true">Nero d'Avola</div>
+    <div class="label" draggable="true" data-name="Chianti">
+        <h3>CHIANTI</h3>
+        <span>Denominazione DOCG</span>
+    </div>
+
+    <div class="label" draggable="true" data-name="Barolo">
+        <h3>BAROLO</h3>
+        <span>Denominazione DOCG</span>
+    </div>
+
+    <div class="label" draggable="true" data-name="Amarone">
+        <h3>AMARONE</h3>
+        <span>Valpolicella DOCG</span>
+    </div>
+
+    <div class="label" draggable="true" data-name="Nero d'Avola">
+        <h3>NERO D'AVOLA</h3>
+        <span>Sicilia DOC</span>
+    </div>
 </div>
 
 <script>
 const labels = document.querySelectorAll('.label');
 const dropzones = document.querySelectorAll('.dropzone');
 let score = 0;
-let draggedElement = null;
+let dragged = null;
 
 labels.forEach(label=>{
     label.addEventListener('dragstart',e=>{
-        draggedElement = label;
-        e.dataTransfer.setData("text", label.textContent);
+        dragged = label;
+        e.dataTransfer.setData("text", label.dataset.name);
     });
 });
 
@@ -172,9 +209,9 @@ dropzones.forEach(zone=>{
         if(zone.textContent !== "") return;
 
         if(data === zone.dataset.correct){
-            zone.textContent = data;
+            zone.innerHTML = "<strong>"+data+"</strong>";
             zone.classList.add("correct");
-            draggedElement.remove();
+            dragged.remove();
             score++;
 
             if(score === 4){
