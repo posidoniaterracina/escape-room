@@ -19,78 +19,78 @@ h1{
 .row{
     display:flex;
     justify-content:center;
-    gap:120px;
-    margin-top:80px;
+    gap:80px;
+    margin-top:60px;
 }
 
-/* BOTTIGLIA */
+/* BOTTIGLIA RIDOTTA 50% */
 .bottle{
     position:relative;
-    width:150px;
-    height:520px;
+    width:75px;
+    height:260px;
 }
 
-/* COLLO */
+/* COLLO -30% (era 270px → ora 190px circa, poi scalato 50%) */
 .neck{
     position:absolute;
     top:0;
     left:50%;
     transform:translateX(-50%);
-    width:45px;
-    height:270px;
+    width:22px;
+    height:95px;
     background:#1c1c1c;
-    border-radius:25px;
+    border-radius:12px;
 }
 
 /* CORPO */
 .body{
     position:absolute;
     bottom:0;
-    width:150px;
-    height:300px;
+    width:75px;
+    height:150px;
     background:linear-gradient(to bottom,#2e2e2e,#1a1a1a);
-    border-radius:80px 80px 30px 30px;
+    border-radius:40px 40px 15px 15px;
     display:flex;
     flex-direction:column;
     align-items:center;
-    padding-top:60px;
-    box-shadow:0 10px 20px rgba(0,0,0,0.35);
+    padding-top:25px;
+    box-shadow:0 6px 12px rgba(0,0,0,0.35);
 }
 
 .region{
     color:white;
     font-weight:bold;
-    margin-bottom:25px;
-    font-size:16px;
+    margin-bottom:15px;
+    font-size:11px;
 }
 
 /* AREA ETICHETTA */
 .dropzone{
-    width:110px;
-    height:85px;
+    width:55px;
+    height:45px;
     background:#f8f5e6;
-    border:2px solid #c6a84f;
+    border:1px solid #c6a84f;
     display:flex;
     align-items:center;
     justify-content:center;
-    border-radius:6px;
-    font-size:14px;
+    border-radius:4px;
+    font-size:10px;
     text-align:center;
-    padding:5px;
+    padding:3px;
 }
 
 /* ETICHETTE REALI */
 .labels{
-    margin-top:100px;
+    margin-top:70px;
     display:flex;
     justify-content:center;
-    gap:40px;
+    gap:30px;
     flex-wrap:wrap;
 }
 
 .label{
-    width:180px;
-    height:110px;
+    width:160px;
+    height:95px;
     background:#f8f5e6;
     border:3px solid #c6a84f;
     border-radius:8px;
@@ -109,12 +109,12 @@ h1{
 
 .label h3{
     margin:0;
-    font-size:20px;
+    font-size:18px;
     letter-spacing:1px;
 }
 
 .label span{
-    font-size:12px;
+    font-size:11px;
     margin-top:5px;
     color:#444;
 }
