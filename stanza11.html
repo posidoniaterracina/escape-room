@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equilibrio Domanda-Offerta</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    text-align:center;
+    background:#f4f6f9;
+}
+
+h1{
+    margin-top:20px;
+}
+
+.container{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-top:20px;
+}
+
+svg{
+    background:white;
+    border:2px solid #333;
+    margin-top:20px;
+}
+
+.buttons{
+    margin-top:25px;
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:6px;
+    background:#2c3e50;
+    color:white;
+    cursor:pointer;
+    font-size:14px;
+}
+
+button.selected{
+    background:#27ae60;
+}
+</style>
+</head>
+<body>
+
+<h1>Trova l'Equilibrio di Mercato</h1>
+<p>Scegli una curva di domanda e una di offerta corrette.</p>
+
+<div class="container">
+
+<svg id="graph" width="350" height="350">
+
+    <!-- Assi -->
+    <line x1="50" y1="300" x2="300" y2="300" stroke="black" stroke-width="2"/>
+    <line x1="50" y1="300" x2="50" y2="50" stroke="black" stroke-width="2"/>
+
+    <!-- Linee dinamiche -->
+    <line id="demandLine" x1="0" y1="0" x2="0" y2="0" stroke="red" stroke-width="3"/>
+    <line id="supplyLine" x1="0" y1="0" x2="0" y2="0" stroke="blue" stroke-width="3"/>
+
+    <!-- Punto equilibrio -->
+    <circle id="equilibrium" cx="0" cy="0" r="6" fill="green" style="display:none"/>
+</svg>
+
+<div class="buttons">
+    <button onclick="selectDemand('correct')">Domanda decrescente</button>
+    <button onclick="selectDemand('wrong')">Domanda crescente</button>
+    <button onclick="selectSupply('correct')">Offerta crescente</button>
+    <button onclick="selectSupply('wrong')">Offerta decrescente</button>
+</div>
+
+</div>
+
+<script>
+let demandChoice = null;
+let supplyChoice = null;
+
+function selectDemand(type){
+    demandChoice = type;
+    updateGraph();
+}
+
+function selectSupply(type){
+    supplyChoice = type;
+    updateGraph();
+}
+
+function updateGraph(){
+
+    const demandLine = document.getElementById("demandLine");
+    const supplyLine = document.getElementById("supplyLine");
+    const equilibrium = document.getElementById("equilibrium");
+
+    // Reset
+    equilibrium.style.display = "none";
+
+    if(demandChoice){
+        if(demandChoice === "correct"){
+            demandLine.setAttribute("x1",50);
+            demandLine.setAttribute("y1",100);
+            demandLine.setAttribute("x2",300);
+            demandLine.setAttribute("y2",300);
+        }else{
+            demandLine.setAttribute("x1",50);
+            demandLine.setAttribute("y1",300);
+            demandLine.setAttribute("x2",300);
+            demandLine.setAttribute("y2",100);
+        }
+    }
+
+    if(supplyChoice){
+        if(supplyChoice === "correct"){
+            supplyLine.setAttribute("x1",50);
+            supplyLine.setAttribute("y1",300);
+            supplyLine.setAttribute("x2",300);
+            supplyLine.setAttribute("y2",100);
+        }else{
+            supplyLine.setAttribute("x1",50);
+            supplyLine.setAttribute("y1",100);
+            supplyLine.setAttribute("x2",300);
+            supplyLine.setAttribute("y2",300);
+        }
+    }
+
+    // Controllo corretto
+    if(demandChoice === "correct" && supplyChoice === "correct"){
+        equilibrium.setAttribute("cx",175);
+        equilibrium.setAttribute("cy",200);
+        equilibrium.style.display = "block";
+
+        setTimeout(()=>{
+            window.location.href="stanza12.html";
+        },1000);
+    }
+}
+</script>
+
+</body>
+</html>
