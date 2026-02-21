@@ -15,7 +15,6 @@ h1{
     margin-top:30px;
 }
 
-/* CONTENITORE */
 .container{
     display:flex;
     justify-content:space-around;
@@ -23,26 +22,25 @@ h1{
     margin-top:80px;
 }
 
-/* BOTTIGLIA */
 .bottle{
     position:relative;
     width:140px;
-    height:380px;
+    height:520px; /* aumentata altezza totale */
 }
 
-/* Collo */
+/* COLLO +300% */
 .neck{
     position:absolute;
     top:0;
     left:50%;
     transform:translateX(-50%);
     width:40px;
-    height:90px;
+    height:270px; /* prima 90px */
     background:#1c1c1c;
-    border-radius:15px;
+    border-radius:20px;
 }
 
-/* Corpo */
+/* CORPO */
 .body{
     position:absolute;
     bottom:0;
@@ -75,27 +73,28 @@ h1{
     font-size:14px;
 }
 
-/* ETICHETTE */
+/* ETICHETTE +50% */
 .labels{
     margin-top:80px;
     display:flex;
     justify-content:center;
-    gap:25px;
+    gap:40px;
 }
 
 .label{
-    padding:12px 22px;
+    padding:18px 33px; /* aumentato 50% */
+    font-size:18px;    /* aumentato */
     background:linear-gradient(145deg,#b31217,#7b0c12);
     color:white;
-    border-radius:8px;
+    border-radius:12px;
     cursor:grab;
     font-weight:bold;
-    box-shadow:0 5px 10px rgba(0,0,0,0.3);
+    box-shadow:0 8px 15px rgba(0,0,0,0.35);
     transition:0.2s;
 }
 
 .label:hover{
-    transform:scale(1.05);
+    transform:scale(1.08);
 }
 
 .correct{
@@ -155,12 +154,10 @@ const labels = document.querySelectorAll('.label');
 const dropzones = document.querySelectorAll('.dropzone');
 let score = 0;
 let draggedElement = null;
-let originalParent = null;
 
 labels.forEach(label=>{
     label.addEventListener('dragstart',e=>{
         draggedElement = label;
-        originalParent = label.parentNode;
         e.dataTransfer.setData("text", label.textContent);
     });
 });
@@ -183,8 +180,6 @@ dropzones.forEach(zone=>{
             if(score === 4){
                 window.location.href="stanza11.html";
             }
-        }else{
-            // ritorna alla posizione iniziale (non serve fare nulla, rimane lì)
         }
     });
 });
